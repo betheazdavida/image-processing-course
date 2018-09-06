@@ -1,0 +1,29 @@
+ <!DOCTYPE html>
+<html>
+<body>
+
+<h1>Equalizer</h1>
+<form action="/3" method="POST" enctype=multipart/form-data>
+  Select a file: <input type="file" name="imgFile"><br><br>
+  Equalizer:<br>
+  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange1">0<BR>
+  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange2">50<BR>
+  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange3">100<BR>
+  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange4">150<BR>
+  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange5">200<BR>
+  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange6">255<BR>
+  <input type="submit" value="Submit">  
+</form> 
+
+<div>
+	Before:<br />
+	<img src={{ url_before }} alt=" ">
+</div>
+
+<div>
+	After:<br />
+	<img src={{ url_after }} alt=" ">
+</div>
+
+</body>
+</html> 
