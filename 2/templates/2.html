@@ -2,16 +2,13 @@
 <html>
 <body>
 
-<h1>Picture Histogram</h1>
-<form action="/histogram" method="POST" enctype=multipart/form-data>
+<h1>Normalize Picture</h1>
+<form action="/normalize" method="POST" enctype=multipart/form-data>
   Select a file: <input type="file" name="imgFile"><br><br>
-  Color:<br>
-  <input type="radio" name="color" value="a" checked> All<br>
-  <input type="radio" name="color" value="r"> Red<br>
-  <input type="radio" name="color" value="g"> Green<br>
-  <input type="radio" name="color" value="b"> Blue<br>  
-  <input type="radio" name="color" value="x"> Grayscale<br>
-  <input type="submit" value="Submit">  
+  Method:<br>
+  <input type="radio" name="method" value="k" checked> Kulmulatif<br>
+  <input type="radio" name="method" value="s"> Scaling<br>
+  <input type="submit" value="Submit">
 </form> 
 </body>
 </html> 
