@@ -4,6 +4,7 @@ import math
 import numpy as np
 from PIL import Image
 
+# fungsi ini digunakan untuk menghasilkan histogram dari suatu gambar
 def calculate_image_matrix_histogram(matrix):
     _, _, channel = matrix.shape
     flat_matrix = matrix.flatten()
@@ -12,6 +13,7 @@ def calculate_image_matrix_histogram(matrix):
         histogram[val][i % channel] += 1
     return histogram
 
+# fungsi ini digunakan untuk menormalisasi sebuah histogram gambar dengan cara kulmulatif
 def equalize_image_matrix(matrix):
     map_value_to_cumulative = {}
 
@@ -31,6 +33,7 @@ def equalize_image_matrix(matrix):
     
     return result
 
+# fungsi ini digunakan untuk memroses input gambar dan menjalankan fungsi equalize_image_matrix
 def normalize(base_image):
     MAX_WIDTH = 600
     MAX_HEIGHT = 400
@@ -50,9 +53,9 @@ def normalize(base_image):
     result_image = Image.fromarray(np.uint8(result_matrix))
     return result_image
 
+# fungsi ini digunakan untuk menormalisasi input image dengan cara scaling
 def scaling(base_image,w,h):
     histogram = calculate_image_matrix_histogram(np.array(base_image))
-    # area = (width * height * 9)/10
     sum_hist = 0
     for i in range(len(histogram)):
         sum_hist += (histogram[i][0] + histogram[i][1] + histogram[i][2])/3
