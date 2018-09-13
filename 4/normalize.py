@@ -6,7 +6,7 @@ from PIL import Image
 from flask import Flask
 
 app = Flask('__main__')
-print(app.root_path)
+
 def calculate_histogram(matrix):
     _, _, channel = matrix.shape
     flat_matrix = matrix.flatten()
