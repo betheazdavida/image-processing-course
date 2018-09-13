@@ -52,7 +52,22 @@ def main3():
         
     return render_template('3.html', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 
-    
+@app.route("/4", methods=['GET'])
+def main4get():
+    return render_template('4.html', url_before = '', url_after = '')
+
+@app.route("/4", methods=['POST'])
+def main4post():
+    if 'imgFile' not in request.files:
+        return render_template('3.html')
+    file = request.files['imgFile']
+    if file.filename == '':
+        return render_template('3.html')
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    image.save(img_path)
+        
+    return render_template('4.html', angka = 'Belum Bisa')
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
