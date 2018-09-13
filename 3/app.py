@@ -28,6 +28,32 @@ def main1():
 def main2():
     return render_template('2.html')
 
+@app.route("/3", methods=['GET'])
+def main3get():
+    return render_template('3.html', url_before = '', url_after = '')
+
+@app.route("/3", methods=['POST'])
+def main3():
+    if 'imgFile' not in request.files:
+        return render_template('3.html')
+    file = request.files['imgFile']
+    if file.filename == '':
+        return render_template('3.html')
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    image.save(img_path)
+    equalizers = [0 for i in range(6)] 
+    for i in range(6):
+        equalizers[i] = int(request.form['myRange' + str(i+1)])
+    to_edit = Image.open(img_path)
+    new_image = equalize(to_edit, equalizers)
+    norm_img_path = 'static/images/normalized_image.png'
+    new_image.save(norm_img_path)
+        
+    return render_template('3.html', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
+
+    
+
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
     if 'imgFile' not in request.files:

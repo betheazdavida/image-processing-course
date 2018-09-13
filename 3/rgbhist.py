@@ -3,7 +3,6 @@ from PIL import Image
 
 import sys
 
-# fungsi ini digunakan untuk membangun histogram red, green, blue, atau grayscale dari sebuah input gambar 
 def build_hist(image, color):
     im = Image.open(image)
     loaded_img = im.load()
