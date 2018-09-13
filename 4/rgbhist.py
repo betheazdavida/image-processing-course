@@ -1,10 +1,12 @@
 import PIL
 from PIL import Image
-
+from flask import Flask
 import sys
 
+app = Flask('__main__')
+
 def build_hist(image, color):
-    im = Image.open(image)
+    im = Image.open(app.root_path + '/' + image)
     loaded_img = im.load()
     w, h = im.size
     

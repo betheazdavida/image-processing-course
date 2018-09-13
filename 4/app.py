@@ -8,7 +8,6 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 from PIL import Image
 
-from werkzeug import secure_filename
 import time
 
 UPLOAD_FOLDER = 'uploads'
@@ -41,14 +40,14 @@ def main3():
         return render_template('3.html')
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
-    image.save(img_path)
+    image.save(app.root_path + '/' + img_path)
     equalizers = [0 for i in range(6)] 
     for i in range(6):
         equalizers[i] = int(request.form['myRange' + str(i+1)])
-    to_edit = Image.open(img_path)
+    to_edit = Image.open(app.root_path + '/' + img_path)
     new_image = equalize(to_edit, equalizers)
     norm_img_path = 'static/images/normalized_image.png'
-    new_image.save(norm_img_path)
+    new_image.save(app.root_path + '/' + norm_img_path)
         
     return render_template('3.html', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 
@@ -65,7 +64,7 @@ def main4post():
         return render_template('3.html')
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
-    image.save(img_path)
+    image.save(app.root_path + '/' + img_path)
         
     return render_template('4.html', angka = 'Belum Bisa')
 
@@ -80,11 +79,11 @@ def show_histogram():
         return 'No selected file'
     image = request.files['imgFile']
     color = request.form.get('color')
-    image.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(image.filename)))
+    image.save(app.root_path + '/' + os.path.join(app.config['UPLOAD_FOLDER'], 'image.png'))
     plt.clf()
     if(color == 'a'):
         colorname = 'Picture'
-        hist = build_hist(UPLOAD_FOLDER + '/' + secure_filename(image.filename), 'a')
+        hist = build_hist(UPLOAD_FOLDER + '/image.png', 'a')
         plt.plot(hist[0], color=(1, 0, 0))
         plt.plot(hist[1], color=(0, 1, 0))
         plt.plot(hist[2], color=(0, 0, 1))
@@ -102,9 +101,9 @@ def show_histogram():
         else:
             colorname = 'Grayscale'
             plotcolor = (0.5, 0.5, 0.5)
-        plt.plot(build_hist(UPLOAD_FOLDER + '/' + secure_filename(image.filename), color), color=plotcolor)
+        plt.plot(build_hist(UPLOAD_FOLDER + '/image.png', color), color=plotcolor)
 
-    plt.savefig('static/images/plot.png')
+    plt.savefig(app.root_path + '/' + 'static/images/plot.png')
     return render_template('plot.html', title = colorname + ' histogram', url ='static/images/plot.png?' + str(time.time()))
 
 @app.route("/normalize", methods=['POST'])
@@ -119,22 +118,22 @@ def show_normalized():
     image = request.files['imgFile']
     method = request.form.get('method')
     img_path = 'static/images/image.png'
-    image.save(img_path)
+    image.save(app.root_path + '/' + img_path)
     if method == 'k':
         # kumulatif
         title = 'Cumulative'
-        imagee = Image.open(img_path)
+        imagee = Image.open(app.root_path + '/' + img_path)
         new_image = normalize(imagee)
         norm_img_path = 'static/images/normalized_image.png'
-        new_image.save(norm_img_path)
+        new_image.save(app.root_path + '/' + norm_img_path)
     else:
         # scaling
         title = 'Scaling'
-        base_image = Image.open(img_path)
+        base_image = Image.open(app.root_path + '/' + img_path)
         width, height = base_image.size
         normalized_img = scaling(base_image, width, height)
         norm_img_path = 'static/images/normalized_image.png'
-        normalized_img.save(norm_img_path)
+        normalized_img.save(app.root_path + '/' + norm_img_path)
         
     return render_template('result.html', title = 'Normalized Picture (' + title + ')', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 

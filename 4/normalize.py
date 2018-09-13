@@ -3,7 +3,10 @@ import os.path
 import math
 import numpy as np
 from PIL import Image
+from flask import Flask
 
+app = Flask('__main__')
+print(app.root_path)
 def calculate_histogram(matrix):
     _, _, channel = matrix.shape
     flat_matrix = matrix.flatten()
@@ -98,7 +101,7 @@ def resize(image,max_width, max_height):
         if height > max_height:
             width, height = width * max_height / height, max_height
         image = image.resize((int(width), int(height)))
-        image.save('static/images/image.png')
+        image.save(app.root_path + '/' + 'static/images/image.png')
     except Exception as e:
         print("Something wrong", e)
         sys.exit(1)
