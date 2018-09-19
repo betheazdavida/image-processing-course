@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect
 from rgbhist import *
 from normalize import *
+from chaincode import *
 import matplotlib
 matplotlib.use('Agg')
 
@@ -139,4 +140,9 @@ def show_normalized():
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0',port=8081)
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # app.run(host='0.0.0.0',port=os.environ['PORT'])
+    for i in range(10):
+        a = build_chaincode('static/images/'+str(i)+'.png')
+        print (a)
+    # a = build_chaincode('static/images/'+str(4)+'.png')
+    # print(a)
