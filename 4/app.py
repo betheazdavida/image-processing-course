@@ -58,15 +58,15 @@ def main4get():
 @app.route("/4", methods=['POST'])
 def main4post():
     if 'imgFile' not in request.files:
-        return render_template('3.html')
+        return render_template('4.html')
     file = request.files['imgFile']
     if file.filename == '':
-        return render_template('3.html')
+        return render_template('4.html')
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
         
-    return render_template('4.html', angka = 'Belum Bisa')
+    return render_template('4.html', angka = file.filename.split('.')[0])
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
@@ -138,4 +138,5 @@ def show_normalized():
     return render_template('result.html', title = 'Normalized Picture (' + title + ')', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    app.run(host='0.0.0.0',port=8081)
+    # app.run(host='0.0.0.0',port=os.environ['PORT'])
