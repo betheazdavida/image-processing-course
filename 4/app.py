@@ -144,5 +144,3 @@ if __name__ == "__main__":
     for i in range(10):
         a = build_chaincode('static/images/'+str(i)+'.png')
         print (a)
-    # a = build_chaincode('static/images/'+str(4)+'.png')
-    # print(a)
