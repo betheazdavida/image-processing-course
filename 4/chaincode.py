@@ -9,7 +9,7 @@ sys.setrecursionlimit(10000)
 
 def build_chaincode(image):
     np.set_printoptions(threshold=np.nan)
-    im = Image.open(image)
+    im = Image.open(app.root_path + '/' + image)
     image = im.load()
     w, h = im.size
     #quantize image to 0 and 1 value
