@@ -68,9 +68,8 @@ def main4post():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    print(img_path)
     chain = build_chaincode(img_path)
-    with open('knn.pickle','rb') as handle:
+    with open('static/pickle/knn.pickle','rb') as handle:
         knn = pickle.load(handle)
     pred = knn.predict(chain)
         
