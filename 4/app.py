@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, redirect
 from rgbhist import *
 from normalize import *
 from chaincode import *
+from chaincode import *
+import pickle
 import matplotlib
 matplotlib.use('Agg')
 
@@ -66,8 +68,12 @@ def main4post():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
+    chain = build_chaincode(img_path)
+    with open('knn.pickle','rb') as handle:
+        knn = pickle.load(handle)
+    pred = knn.predict(chain)
         
-    return render_template('4.html', angka = file.filename.split('.')[0])
+    return render_template('4.html', angka = pred)
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
