@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect
 from rgbhist import *
 from normalize import *
 from chaincode import *
-from chaincode import *
 import pickle
 import matplotlib
 matplotlib.use('Agg')
