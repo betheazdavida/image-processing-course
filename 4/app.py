@@ -145,8 +145,8 @@ def show_normalized():
     return render_template('result.html', title = 'Normalized Picture (' + title + ')', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0',port=8081)
-    # app.run(host='0.0.0.0',port=os.environ['PORT'])
-    for i in range(10):
-        a = build_chaincode('static/images/'+str(i)+'.png')
-        print (a)
+    app.run(host='0.0.0.0',port=8081)
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # for i in range(10):
+    #     a = build_chaincode('static/images/'+str(i)+'.png')
+    #     print (a)
