@@ -73,7 +73,7 @@ def main4post():
         knn = pickle.load(handle)
     pred = knn.predict(chain)
         
-    return render_template('4.html', angka = pred)
+    return render_template('4.html', angka = pred[0])
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
