@@ -10,6 +10,7 @@ matplotlib.use('Agg')
 
 from matplotlib import pyplot as plt
 from PIL import Image
+from scipy.misc import toimage
 
 import time
 
@@ -72,7 +73,6 @@ def main4post():
     with open(app.root_path + '/static/pickle/knn.pickle','rb') as handle:
         knn = pickle.load(handle)
     pred = knn.predict(chain)
-        
     return render_template('4.html', angka = pred[0])
 
 @app.route("/5", methods=['GET'])
@@ -90,7 +90,10 @@ def main5post():
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
     bone = thinning(img_path)
-    print (bone)
+    bone_img = toimage(bone)
+    bone_img_path = 'static/images/bone_image.png' 
+    bone_img.save(app.root_path + '/' + bone_img_path)
+    return render_template('5.html', image_url = bone_img_path + '?' + str(time.time()))
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
@@ -162,6 +165,7 @@ def show_normalized():
     return render_template('result.html', title = 'Normalized Picture (' + title + ')', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 
 if __name__ == "__main__":
-    thinning()
-    #app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # thinning()
+    app.run(host='0.0.0.0',port=8111)
+    # app.run(host='0.0.0.0',port=os.environ['PORT'])
 
