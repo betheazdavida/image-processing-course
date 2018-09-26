@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect
 from rgbhist import *
 from normalize import *
 from chaincode import *
-from chaincode import *
 import pickle
 import matplotlib
 matplotlib.use('Agg')
@@ -69,11 +68,19 @@ def main4post():
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
     chain = build_chaincode(img_path)
+<<<<<<< HEAD
     with open('knn.pickle','rb') as handle:
         knn = pickle.load(handle)
     pred = knn.predict(chain)
         
     return render_template('4.html', angka = pred)
+=======
+    with open(app.root_path + '/static/pickle/knn.pickle','rb') as handle:
+        knn = pickle.load(handle)
+    pred = knn.predict(chain)
+        
+    return render_template('4.html', angka = pred[0])
+>>>>>>> heroku
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
@@ -146,7 +153,14 @@ def show_normalized():
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0',port=8081)
+<<<<<<< HEAD
     # app.run(host='0.0.0.0',port=os.environ['PORT'])
     for i in range(10):
         a = build_chaincode('static/images/'+str(i)+'.png')
         print (a)
+=======
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # for i in range(10):
+    #     a = build_chaincode('static/images/'+str(i)+'.png')
+    #     print (a)
+>>>>>>> heroku

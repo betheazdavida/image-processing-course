@@ -5,7 +5,7 @@ import numpy as np
 from flask import Flask
 
 app = Flask('__main__')
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(50000)
 
 def build_chaincode(image):
     np.set_printoptions(threshold=np.nan)
