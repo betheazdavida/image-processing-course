@@ -11,14 +11,15 @@ def thinning(image):
     np.set_printoptions(threshold=np.nan)
     im = Image.open(app.root_path + '/' + image)
     image = im.load()
-    w, h = im.size
+    h, w = im.size
     #quantize image to 0 and 1 value
     quantitized_image = np.zeros((w + 2, h + 2), dtype=int)
     for i in range(w):
         for j in range(h):
-            rgb_image = image[i, j]
-
-            if (len(rgb_image) == 4):
+            rgb_image = image[j, i]
+            if(isinstance(rgb_image, int)):
+                grayscale = 0
+            elif (len(rgb_image) == 4):
                 if (rgb_image[3] > 0):
                     grayscale = (rgb_image[0] + rgb_image[1] + rgb_image[2]) / 3
                 else:
