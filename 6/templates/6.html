@@ -1,0 +1,22 @@
+ <!DOCTYPE html>
+<html>
+<body>
+
+<h1>ASCII Predict</h1>
+<form action="/6" method="POST" enctype=multipart/form-data>
+  Select a file: <input type="file" name="imgFile"><br><br>
+  <input type="submit" value="Submit">  
+</form> 
+
+<div>
+	Bone:
+	<img src="{{ image_url }}">
+	Bone: {{bone}}
+	<form action="/6" method="POST" enctype=multipart/form-data>
+  	  <input type="submit" value="Predict">  
+	</form> 
+	Angka:{{ angka }}
+</div>
+
+</body>
+</html> 
