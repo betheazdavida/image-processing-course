@@ -19,6 +19,7 @@ UPLOAD_FOLDER = 'uploads'
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ROOT_PATH'] = app.root_path
+app_bone = []
 
 @app.route("/")
 def main():
@@ -113,12 +114,15 @@ def main6post():
     bone = thinning(img_path, app.root_path)
     bone_img = toimage(bone)
     bone_img_path = 'static/images/bone_image.png' 
+    app_bone = bone
     bone_img.save(app.root_path + '/' + bone_img_path)
-    return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()), bone = bone)
+    return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()))
 
 @app.route("/ascii", methods=['POST'])
 def predict_ascii():
-    return request.files['bone']
+    bone_img_path = 'static/images/bone_image.png'
+    karakter = 'a'
+    return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()), karakter = karakter)
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
