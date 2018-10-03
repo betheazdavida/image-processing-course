@@ -90,7 +90,7 @@ def main5post():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    bone = thinning(img_path)
+    bone = thinning(img_path, app.root_path)
     bone_img = toimage(bone)
     bone_img_path = 'static/images/bone_image.png' 
     bone_img.save(app.root_path + '/' + bone_img_path)
@@ -110,12 +110,15 @@ def main6post():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    bone = thinning(img_path)
+    bone = thinning(img_path, app.root_path)
     bone_img = toimage(bone)
     bone_img_path = 'static/images/bone_image.png' 
     bone_img.save(app.root_path + '/' + bone_img_path)
     return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()), bone = bone)
 
+@app.route("/ascii", methods=['POST'])
+def predict_ascii():
+    return request.files['bone']
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():

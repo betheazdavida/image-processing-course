@@ -12,8 +12,9 @@
 	Bone:
 	<img src="{{ image_url }}">
 	Bone: {{bone}}
-	<form action="/6" method="POST" enctype=multipart/form-data>
-  	  <input type="submit" value="Predict">  
+	<form action="/ascii" method="POST" enctype=multipart/form-data>
+  	  <input type="hidden" name = "bone" value={{bone}}> 
+  	  <input type="submit" value="redict"> 
 	</form> 
 	Angka:{{ angka }}
 </div>
