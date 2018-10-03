@@ -114,15 +114,25 @@ def main6post():
     bone = thinning(img_path, app.root_path)
     bone_img = toimage(bone)
     bone_img_path = 'static/images/bone_image.png' 
+    global app_bone
     app_bone = bone
     bone_img.save(app.root_path + '/' + bone_img_path)
     return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()))
 
-@app.route("/ascii", methods=['POST'])
+@app.route("/ascii", methods=['GET'])
+def asciiget():
+    return render_template('6.html', url_before = '', url_after = '')
+
+@app.route("/ascii", methods=['POST', 'GET'])
 def predict_ascii():
+    global app_bone
+    if(app_bone == []):
+        return render_template('6.html')
     bone_img_path = 'static/images/bone_image.png'
-    karakter = 'a'
-    return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()), karakter = karakter)
+    array_feature = get_feature_from_bone(app_bone)
+    #Predict here
+    karakter = "a"
+    return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()), karakter = karakter, fitur = array_feature)
 
 @app.route("/histogram", methods=['POST'])
 def show_histogram():
@@ -194,7 +204,6 @@ def show_normalized():
     return render_template('result.html', title = 'Normalized Picture (' + title + ')', url_before = img_path + '?' + str(time.time()), url_after = norm_img_path + '?' + str(time.time()))
 
 if __name__ == "__main__":
-    # thinning()
-    # app.run(host='0.0.0.0',port=8111)
+    #app.run(host='0.0.0.0',port=8111)
     app.run(host='0.0.0.0',port=os.environ['PORT'])
 

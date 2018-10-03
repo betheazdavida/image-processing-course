@@ -5,9 +5,11 @@ import numpy as np
 from flask import Flask
 
 sys.setrecursionlimit(50000)
+np.set_printoptions(threshold=np.nan)
 
+global_image = []
+threshold = 0.15
 def thinning(image, root_path):
-    np.set_printoptions(threshold=np.nan)
     im = Image.open(root_path + '/' + image)
     image = im.load()
     h, w = im.size
@@ -28,8 +30,8 @@ def thinning(image, root_path):
 
             if(grayscale < 127):
                 quantitized_image[i + 1, j + 1] = 1
-      
-    changing1 = changing2 = 1        #  the points to be removed (set as 0)  
+    #Algoritma Zhang-suen
+    changing1 = changing2 = 1        #  the points to be removed
     while changing1 or changing2:   #  iterates until no further changes occur in the image
         # Step 1
         changing1 = []
@@ -59,17 +61,178 @@ def thinning(image, root_path):
         for x, y in changing2: 
             quantitized_image[x][y] = 0
 
-
     return quantitized_image
 
 def neighbours(x,y,image):
-    "Return 8-neighbours of image point P1(x,y), in a clockwise order"
+    # "Return 8-neighbours of image point P1(x,y), in a clockwise order"
     img = image
     x_1, y_1, x1, y1 = x-1, y-1, x+1, y+1
     return [ img[x_1][y], img[x_1][y1], img[x][y1], img[x1][y1],     # P2,P3,P4,P5
                 img[x1][y], img[x1][y_1], img[x][y_1], img[x_1][y_1] ]    # P6,P7,P8,P9
 
 def transitions(neighbours):
-    "No. of 0,1 patterns (transitions from 0 to 1) in the ordered sequence"
+    #"No. of 0,1 patterns (transitions from 0 to 1) in the ordered sequence"
     n = neighbours + neighbours[0:1]      # P2, P3, ... , P8, P9, P2
     return sum( (n1, n2) == (0, 1) for n1, n2 in zip(n, n[1:]) )  # (P2,P3), (P3,P4), ... , (P8,P9), (P9,P2)
+
+def get_feature_from_bone(bone):
+    h, w = bone.shape
+    global global_image
+    global_image = bone
+    datas = []
+    for i in range(h):
+        for j in range(w):
+            if(global_image[i, j] == 1): #jika bertemu titik yg belum diperiksa
+                if(path_count(i, j, global_image) == 1): #jika titik di ujung
+                    corners = []
+                    corners.append([i,j])
+                    global_image[i, j] = 2
+                    circles, branchs, corner, chain_codes= check(i, j)
+                    corners = corners + corner
+                    data = []
+                    circles = circles/2
+                    data.extend([int(circles),branchs, corners, chain_codes])
+                    datas.append(data)
+                elif(path_count(i, j, global_image) == 2): #jika titik di tengah
+                    corners = []
+                    global_image[i, j] = 2
+                    circles, branchs, corner, chain_codes = check(i, j)
+                    data = []
+                    corners = corners + corner
+                    circles = circles/2
+                    #hapus cabang palsu pada titik awal
+                    for x in branchs:
+                        if(x[0] == i and x[1] == j):
+                            branchs.remove(x)
+                    data.extend([int(circles), branchs, corners, chain_codes])
+                    datas.append(data)
+
+                #clean tails and empty chaincodes
+                max_length = len(max(data[3], key=len))
+                removed = [item for item in data[3] if(len(item) < ((max_length - 2) * threshold) +2)]
+                data[3] = [item for item in data[3] if(len(item) >= ((max_length - 2) * threshold) +2)]
+                #menghapus cabang dan titik ujung palsu
+                for x in removed:
+                    if(len(x) > 2):
+                        a = x[0]
+                        b = x[-1]
+                        for y in data[1]:
+                            if((abs(a[0] - y[0]) <= 1 and abs(a[1] - y[1] <= 1)) or (abs(b[0] - y[0]) <= 1 and abs(b[1] - y[1] <= 1))):
+                                data[1].remove(y)
+                                for z in data[2]:
+                                    if(a == z or b == z):
+                                        data[2].remove(z)
+    # Print for debugging                                    
+    # for i in range(h):
+    #     for j in range(w):
+    #         if((global_image[i,j] == 0)):
+    #             print(" ", end='')
+    #         else:
+    #             print(global_image[i,j],end='')
+        print()
+
+    return datas
+
+def check(i,j):
+    global global_image
+    corners = []
+    circles = 0
+    branchs = []
+    chain_codes = []
+    chain_code = []
+    chain_code.append([i,j])
+    branch_path = 0
+    #penelusuran selama masih ada jalan
+    while (path_count(i,j, global_image) >= 1):
+        if(path_count(i,j, global_image) == 1):
+            global_image[i,j] = 2
+            i, j, code = next_path(i, j, global_image)
+            chain_code.append(code)
+        else: #bertemu cabang, panggil fungsi secara rekursif
+            global_image[i,j] = 3
+            list_of_path = path_list(i,j,global_image)
+            branch_path = len(list_of_path)
+            for x in list_of_path:
+                a,b = x
+                circle, branch, corner, rec_chain_code = check(a, b)
+                circles = circles + circle
+                corners = corners + corner
+                branchs = branchs + branch
+                chain_codes = chain_codes + rec_chain_code
+    #penghitungan properti gambar hasil penelurusan
+    if (stop_near_branch(i,j,global_image) and passed_neighbor(i,j,global_image)):
+        circles += 1
+        global_image[i,j] = 2
+        #print("circles", i, j)
+    elif(global_image[i,j] == 1):
+        corners.append([i,j])
+        global_image[i,j] = 2
+        #print("corners", i, j)
+    elif(global_image[i,j] == 3):
+        #print("branch", i, j)
+        branchs.append([i,j,branch_path])
+    chain_code.append([i,j])
+    chain_codes.append(chain_code)
+    data = []
+    data.extend([circles,branchs, corners, chain_codes])
+    return data
+
+#menghitung jumlah jalan yang mungkin
+def path_count(x, y, image):
+    neighbor = neighbours(x, y, image)
+    before = neighbor[len(neighbor) - 1]
+    a = [[x-1,y],[x-1,y+1],[x,y+1],[x+1,y+1],[x+1,y],[x+1,y-1],[x, y-1],[x-1,y-1]]
+    path = 0
+    for i in range (len(neighbor)):
+        if(neighbor[i] == 1 and before == 0):
+            if(not(stop_near_branch(x,y, image)) or not(stop_near_branch(a[i][0], a[i][1], image))):
+                path += 1
+        before = neighbor[i]
+    return path
+
+#True jika berada di dekat cabang
+def stop_near_branch(x, y, image):
+    neighbor = neighbours(x, y, image)
+    for i in range (len(neighbor)):
+        if(neighbor[i] == 3):
+            return True
+    return False
+#True jika berada di dekat titik yang telah dilewati
+def passed_neighbor(x, y, image):
+    neighbor = neighbours(x, y, image)
+    for i in range (len(neighbor)):
+        if(neighbor[i] == 2):
+            return True
+    return False
+#Mengembalikan daftar titik yang bisa dilalui
+def path_list(x, y, image):
+    neighbor = neighbours(x, y, image)
+    a = [[x-1,y],[x-1,y+1],[x,y+1],[x+1,y+1],[x+1,y],[x+1,y-1],[x, y-1],[x-1,y-1]]
+    path_straight = []
+    path_oblique = []
+    before = neighbor[len(neighbor) - 1]
+    for i in range (len(neighbor)):
+        if(neighbor[i] == 1 and before == 0):
+            if(i % 2 == 0):
+                path_straight.append(a[i])
+            else:
+                path_oblique.append(a[i])
+        before = neighbor[i]
+    return path_straight + path_oblique
+
+#Menentukan titik selanjutnya yang akan diambil
+def next_path(x, y, image):
+    neighbor = neighbours(x, y, image)
+    index = 0
+    a = [[x-1,y],[x-1,y+1],[x,y+1],[x+1,y+1],[x+1,y],[x+1,y-1],[x, y-1],[x-1,y-1]]
+    for i in range (len(neighbor)):
+        if(neighbor[i] == 1 and i % 2 == 0):
+            b = a[i]
+            b.append(i)
+            return b
+    for i in range (len(neighbor)):
+        if(neighbor[i] == 1 and i % 2 == 1):
+            b = a[i]
+            b.append(i)
+            return b
+    return [-1,-1, -1]
