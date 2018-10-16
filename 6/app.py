@@ -87,7 +87,7 @@ def main4posttest():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    chain = build_chaincode(img_path)
+    chain = build_chaincode(img_path, app.root_path)
     with open(app.root_path + '/static/pickle/knn.pickle','rb') as handle:
         knn = pickle.load(handle)
     pred = knn.predict(chain)
