@@ -179,8 +179,8 @@ def predict_ascii():
     if(array_feature != []):
         karakter =  predict(array_feature)
     else:
-        karakter = 'a'
-    return render_template('6.html', image_url = bone_img_path + '?' + str(time.time()), karakter = karakter)
+        karakter = 'Not Found'
+    return json.dumps({'karakter': karakter })
 
 
 if __name__ == "__main__":
