@@ -2,7 +2,6 @@ import sys
 import PIL
 from PIL import Image
 import numpy as np
-from flask import Flask
 
 sys.setrecursionlimit(50000)
 np.set_printoptions(threshold=np.nan)
@@ -122,15 +121,8 @@ def get_feature_from_bone(bone):
                                 for z in data[2]:
                                     if(a == z or b == z):
                                         data[2].remove(z)
-    # Print for debugging                                    
-    # for i in range(h):
-    #     for j in range(w):
-    #         if((global_image[i,j] == 0)):
-    #             print(" ", end='')
-    #         else:
-    #             print(global_image[i,j],end='')
-        print()
 
+    datas.append([h,w])
     return datas
 
 def check(i,j):

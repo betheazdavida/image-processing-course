@@ -2,7 +2,6 @@ import sys
 import PIL
 from PIL import Image
 import numpy as np
-from flask import Flask
 
 sys.setrecursionlimit(50000)
 

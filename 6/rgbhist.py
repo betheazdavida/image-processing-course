@@ -1,6 +1,5 @@
 import PIL
 from PIL import Image
-from flask import Flask
 import sys
 
 

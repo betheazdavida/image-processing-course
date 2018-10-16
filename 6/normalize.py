@@ -3,7 +3,6 @@ import os.path
 import math
 import numpy as np
 from PIL import Image
-from flask import Flask
 
 
 def calculate_histogram(matrix):
