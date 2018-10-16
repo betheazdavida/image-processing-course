@@ -1,4 +1,4 @@
-import os
+import os, json
 from flask import Flask, render_template, request, redirect
 from rgbhist import *
 from normalize import *
