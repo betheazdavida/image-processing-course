@@ -1,16 +1,142 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
+  <style type="text/css">
+
+    .title {
+      margin: 10px;
+      width: 95%;
+    }
+
+    h3 {
+      text-align: center;
+      padding-top: 6px;
+      padding-bottom: 1px;
+      font-weight: bolder;
+    }
+
+    .form {
+      width: 100%;
+    }
+
+    .card {
+      width: 95%;
+      margin: 10px;
+      margin-bottom: 0px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      background-color: white;
+      text-align: -webkit-center;
+    }
+
+    .noimage {
+      text-align: center;
+    }
+    .upload {
+      margin: 5px 10px;
+      transition: 0.3s;
+      background-color: #3498db;
+      height: 35px;
+      cursor: pointer;
+      color: white;
+      padding: 5px;
+    }
+
+    .upload:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .submit {
+      font-weight: bolder;
+      font-size: 28px;
+      padding: 2px;
+      height: 50px;
+      background-color: #0be881;
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
 <body>
+  <div class="container">
+    <div class="row">
+      <div class="title">
+        <h3>Number Detector</h3>
+      </div>
+    </div>
 
-<h1>Number Detector</h1>
-<form action="/4" method="POST" enctype=multipart/form-data>
-  Select a file: <input type="file" name="imgFile"><br><br>
-  <input type="submit" value="Submit">  
-</form> 
+    <div class="row">
+      <form class="form" action="/4" method="POST" enctype=multipart/form-data>
+        
+        <div>
+          <label class="card upload">
+            <input id="file" type="file" accept="image/*" onchange="loadFile(event)" name="imgFile">
+            Select Image
+          </label>
+          <div class="noimage" id="outputaft">No Image</div>
+          <img class="card hidden" id="outputbef" />
+        </div>
 
-<div>
-	Angka:{{ angka }}
-</div>
+        <input id="submit" class="card upload submit" type="submit" value="DETECT">
+        <input id="buttons" class="card upload submit hidden" value="DETECT">
 
+      </form>
+    </div>
+
+    <div class="row">
+        <div class="subtitle">Result</div>
+      {{ angka }}
+    </div>
+  </div>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+  var loadFile = function(event) {
+    var outputbef = document.getElementById('outputbef');
+    var outputbefClass = outputbef.classList;
+    outputbefClass.remove("hidden");
+    
+    var outputaft = document.getElementById('outputaft');
+    var outputaftClass = outputaft.classList;
+    outputaftClass.add("hidden");
+
+    outputbef.src = URL.createObjectURL(event.target.files[0]);
+
+    var submit = document.getElementById('buttons');
+    var submitClass = submit.classList;
+    submitClass.remove("hidden");
+  };
+
+  $('#buttons').click(function() {
+    var formData = new FormData();
+    formData.append('imgFile', $('#file')[0].files[0]);
+    $.ajax({
+      url: '/test',
+      type: 'POST',
+      data: formData,
+      processData: false,  // tell jQuery not to process the data
+      contentType: false,  // tell jQuery not to set contentType
+      success: function(response) {
+          console.log(response);
+      },
+      error: function(error) {
+          console.log(error);
+      }
+    });
+  });
+
+</script>
 </html> 

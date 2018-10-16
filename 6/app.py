@@ -77,6 +77,22 @@ def main4post():
     pred = knn.predict(chain)
     return render_template('4.html', angka = pred[0])
 
+@app.route("/test", methods=['POST'])
+def main4posttest():
+    if 'imgFile' not in request.files:
+        return json.dumps({'status':'Error1'})
+    file = request.files['imgFile']
+    if file.filename == '':
+        return json.dumps({'status':'Error2'})
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    image.save(app.root_path + '/' + img_path)
+    chain = build_chaincode(img_path)
+    with open(app.root_path + '/static/pickle/knn.pickle','rb') as handle:
+        knn = pickle.load(handle)
+    pred = knn.predict(chain)
+    return json.dumps({'angka': pred[0]})
+
 @app.route("/5", methods=['GET'])
 def main5get():
     return render_template('5.html', url_before = '', url_after = '')
