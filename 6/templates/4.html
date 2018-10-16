@@ -25,6 +25,7 @@
 
     .card {
       width: 95%;
+      height: 100%;
       margin: 10px;
       margin-bottom: 0px;
       border-radius: 5px;
@@ -36,6 +37,7 @@
     .noimage {
       text-align: center;
     }
+
     .upload {
       margin: 5px 10px;
       transition: 0.3s;
@@ -66,6 +68,13 @@
       background-color: #0be881;
       margin-top: 20px;
     }
+    
+    .subtitle {
+      margin-left: 10px;
+      margin-top: 20px;
+      padding: 3px;
+      font-weight: bolder;
+    }
 
   </style>
 </head>
@@ -78,7 +87,7 @@
     </div>
 
     <div class="row">
-      <form class="form" action="/4" method="POST" enctype=multipart/form-data>
+      <form class="form">
         
         <div>
           <label class="card upload">
@@ -89,20 +98,25 @@
           <img class="card hidden" id="outputbef" />
         </div>
 
-        <input id="submit" class="card upload submit" type="submit" value="DETECT">
-        <input id="buttons" class="card upload submit hidden" value="DETECT">
+        <button id="submit" type="button" class="card upload submit hidden">DETECT</button>
 
       </form>
     </div>
 
     <div class="row">
-        <div class="subtitle">Result</div>
-      {{ angka }}
+      <div id="results" class="subtitle">Result: </div>
+      <div id="loading" class="subtitle">Loading...</div>
+      <div id="result" class="subtitle"></div>
     </div>
+
   </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+
+  $("#loading").hide();
+  $("#results").hide();
+  $("#result").hide();
 
   var loadFile = function(event) {
     var outputbef = document.getElementById('outputbef');
@@ -115,25 +129,37 @@
 
     outputbef.src = URL.createObjectURL(event.target.files[0]);
 
-    var submit = document.getElementById('buttons');
+    var submit = document.getElementById('submit');
     var submitClass = submit.classList;
     submitClass.remove("hidden");
+
+    var result = document.getElementById('result');
+    var resultClass = result.classList;
+    resultClass.remove("hidden");
+
   };
 
-  $('#buttons').click(function() {
-    var formData = new FormData();
-    formData.append('imgFile', $('#file')[0].files[0]);
+  $('#submit').click(function() {
+    var formData = new FormData($('form')[0]);
     $.ajax({
-      url: '/test',
+      url: '/4',
       type: 'POST',
       data: formData,
-      processData: false,  // tell jQuery not to process the data
-      contentType: false,  // tell jQuery not to set contentType
+      processData: false,
+      contentType: false,
+      beforeSend: function() {
+        $("#loading").show();
+        $("#submit").prop('disabled', true);
+      },
       success: function(response) {
-          console.log(response);
+        $("#results").show();
+        $("#loading").hide();
+        $("#submit").prop('disabled', false);
+        $("#result").show();
+        $('#result').text(JSON.parse(response).angka);
       },
       error: function(error) {
-          console.log(error);
+        console.log(error);
       }
     });
   });
