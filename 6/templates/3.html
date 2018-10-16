@@ -1,29 +1,274 @@
  <!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
+  <style type="text/css">
+
+    .title {
+      margin: 10px;
+      width: 95%;
+    }
+
+    h3 {
+      text-align: center;
+      padding-top: 6px;
+      padding-bottom: 1px;
+      font-weight: bolder;
+    }
+
+    .form {
+      width: 100%;
+    }
+
+    .card {
+      width: 95%;
+      height: 100%;
+      margin: 10px;
+      margin-bottom: 0px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      background-color: white;
+      text-align: -webkit-center;
+    }
+
+    .noimage {
+      text-align: center;
+    }
+    .upload {
+      margin: 5px 10px;
+      transition: 0.3s;
+      background-color: #3498db;
+      height: 35px;
+      cursor: pointer;
+      color: white;
+      padding: 5px;
+    }
+
+    .upload:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .radioContainer {
+      width: 95%;
+      margin: 2px 10px;
+    }
+
+    .subtitle {
+      margin-left: 10px;
+      margin-top: 20px;
+      padding: 3px;
+      font-weight: bolder;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      margin: 18px 0;
+      width: 83%;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8.4px;
+      cursor: pointer;
+      animate: 0.2s;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      background: #f6e58d;
+      border-radius: 5px;
+      /*border: 0.2px solid #010101;*/
+    }
+    input[type=range]::-webkit-slider-thumb {
+      /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      border: 0.6px solid #000000;
+      height: 30px;
+      width: 24px;
+      border-radius: 3px;
+      background: #ffffff;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -10px;
+    }
+    input[type=range]:focus::-webkit-slider-runnable-track {
+      background: #f9ca24;
+    }
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 8.4px;
+      cursor: pointer;
+      animate: 0.2s;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      background: #f6e58d;
+      border-radius: 1.3px;
+      border: 0.2px solid #010101;
+    }
+    input[type=range]::-moz-range-thumb {
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      border: 1px solid #000000;
+      height: 36px;
+      width: 16px;
+      border-radius: 3px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    input[type=range]::-ms-track {
+      width: 100%;
+      height: 8.4px;
+      cursor: pointer;
+      animate: 0.2s;
+      background: transparent;
+      border-color: transparent;
+      border-width: 16px 0;
+      color: transparent;
+    }
+    input[type=range]::-ms-fill-lower {
+      background: #2a6495;
+      border: 0.2px solid #010101;
+      border-radius: 2.6px;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    }
+    input[type=range]::-ms-fill-upper {
+      background: #f6e58d;
+      border: 0.2px solid #010101;
+      border-radius: 2.6px;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    }
+    input[type=range]::-ms-thumb {
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      border: 1px solid #000000;
+      height: 36px;
+      width: 16px;
+      border-radius: 3px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    input[type=range]:focus::-ms-fill-lower {
+      background: #f6e58d;
+    }
+    input[type=range]:focus::-ms-fill-upper {
+      background: #f9ca24;
+    }
+    .optionContainer {
+      width: 95%;
+      margin: 2px 10px;
+    }
+    .submit {
+      font-weight: bolder;
+      font-size: 28px;
+      padding: 2px;
+      height: 50px;
+      background-color: #0be881;
+      margin-top: 20px;
+    }
+  </style>
+</head>
 <body>
 
-<h1>Equalizer</h1>
-<form action="/3" method="POST" enctype=multipart/form-data>
-  Select a file: <input type="file" name="imgFile"><br><br>
-  Equalizer:<br>
-  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange1">0<BR>
-  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange2">50<BR>
-  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange3">100<BR>
-  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange4">150<BR>
-  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange5">200<BR>
-  <input type="range" min="1" max="1000" value="50" class="slider" name="myRange6">255<BR>
-  <input type="submit" value="Submit">  
-</form> 
+  <div class="container">
+    <div class="row">
+      <div class="title">
+        <h3>Equalizer</h3>
+      </div>
+    </div>
 
-<div>
-	Before:<br />
-	<img src={{ url_before }} alt=" ">
-</div>
+    <div class="row">
+      <form class="form">
 
-<div>
-	After:<br />
-	<img src={{ url_after }} alt=" ">
-</div>
+        <div>
+          <label class="card upload">
+            <input id="file" type="file" accept="image/*" onchange="loadFile(event)" name="imgFile">
+            Select Image
+          </label>
+          <div class="noimage" id="outputaft">No Image</div>
+          <img class="card hidden" id="outputbef" />
+        </div>
+
+        <div class="hidden" id="um">
+          <div class="subtitle">Equalizer</div>
+          <div class="optionContainer">
+            <input type="range" min="1" max="1000" value="50" class="slider" name="myRange1">&emsp;<b>0</b><br />
+            <input type="range" min="1" max="1000" value="50" class="slider" name="myRange2">&emsp;<b>50</b><br />
+            <input type="range" min="1" max="1000" value="50" class="slider" name="myRange3">&emsp;<b>100</b><br />
+            <input type="range" min="1" max="1000" value="50" class="slider" name="myRange4">&emsp;<b>150</b><br />
+            <input type="range" min="1" max="1000" value="50" class="slider" name="myRange5">&emsp;<b>200</b><br />
+            <input type="range" min="1" max="1000" value="50" class="slider" name="myRange6">&emsp;<b>255</b><br />
+          </div>
+        </div>
+
+        <input id="submit" type="submit" class="card upload submit hidden" value="Equalize!">
+      </form> 
+    </div>
+
+    <div class="row">
+      <div id="results" class="subtitle">After</div>
+      <br /><div id="loading" class="subtitle">Loading...</div>
+      <img id="result" class="card" src="">
+    </div>
+  </div>
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+  $("#loading").hide();
+  $("#results").hide();
+  $("#result").hide();
+
+  var loadFile = function(event) {
+    var outputbef = document.getElementById('outputbef');
+    var outputbefClass = outputbef.classList;
+    outputbefClass.remove("hidden");
+    
+    var outputaft = document.getElementById('outputaft');
+    var outputaftClass = outputaft.classList;
+    outputaftClass.add("hidden");
+
+    outputbef.src = URL.createObjectURL(event.target.files[0]);
+
+    var um = document.getElementById('um');
+    var umClass = um.classList;
+    umClass.remove("hidden");
+
+    var submit = document.getElementById('submit');
+    var submitClass = submit.classList;
+    submitClass.remove("hidden");
+  };
+
+  $('#submit').click(function() {
+    var formData = new FormData($('form')[0]);
+    $.ajax({
+      url: '/3',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      beforeSend: function() {
+        $("#loading").show();
+        $("#submit").prop('disabled', true);
+      },
+      success: function(response) {
+        $("#results").show();
+        $("#loading").hide();
+        $("#submit").prop('disabled', false);
+        $("#result").show();
+        $('#result').attr('src', JSON.parse(response).url_after);
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  });
+</script>
 </html> 
