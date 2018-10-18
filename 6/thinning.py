@@ -105,22 +105,35 @@ def get_feature_from_bone(bone):
                             branchs.remove(x)
                     data.extend([int(circles), branchs, corners, chain_codes])
                     datas.append(data)
+                elif(path_count(i, j, global_image) == 0): # jika hanya satu titik
+                    corners = []
+                    corners.append([i,j])
+                    global_image[i, j] = 2
+                    circles = 0
+                    branchs = []
+                    chain_codes = []
+                    data = []
+                    data.extend([int(circles),branchs, corners, chain_codes])
+                    datas.append(data)
 
                 #clean tails and empty chaincodes
-                max_length = len(max(data[3], key=len))
-                removed = [item for item in data[3] if(len(item) < ((max_length - 2) * threshold) +2)]
-                data[3] = [item for item in data[3] if(len(item) >= ((max_length - 2) * threshold) +2)]
-                #menghapus cabang dan titik ujung palsu
-                for x in removed:
-                    if(len(x) > 2):
-                        a = x[0]
-                        b = x[-1]
-                        for y in data[1]:
-                            if((abs(a[0] - y[0]) <= 1 and abs(a[1] - y[1] <= 1)) or (abs(b[0] - y[0]) <= 1 and abs(b[1] - y[1] <= 1))):
-                                data[1].remove(y)
-                                for z in data[2]:
-                                    if(a == z or b == z):
-                                        data[2].remove(z)
+                if(data[3] != []):
+                    max_length = len(max(data[3], key=len))
+                    removed = [item for item in data[3] if(len(item) < ((max_length - 2) * threshold) +2)]
+                    data[3] = [item for item in data[3] if(len(item) >= ((max_length - 2) * threshold) +2)]
+                    #menghapus cabang dan titik ujung palsu
+                    for x in removed:
+                        if(len(x) > 2):
+                            a = x[0]
+                            b = x[-1]
+                            for y in data[1]:
+                                if((abs(a[0] - y[0]) <= 1 and abs(a[1] - y[1] <= 1)) or (abs(b[0] - y[0]) <= 1 and abs(b[1] - y[1] <= 1))):
+                                    data[1].remove(y)
+                                    for z in data[2]:
+                                        if(a == z or b == z):
+                                            data[2].remove(z)                
+                
+
 
     datas.append([h,w])
     return datas

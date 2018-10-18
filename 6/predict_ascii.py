@@ -31,7 +31,10 @@ def predict(array_feature):
         if(n_circle == 0):
             if(n_branch == 0):
                 if(n_corner == 1):
-                    return 'N w'
+                    if(x[0] == 0 and x[1] == 1 and x[2] == 0 and x[3] == 0):
+                        return ': j'
+                    if(x[0] == 1 and x[1] == 0 and x[2] == 0 and x[3] == 0):
+                        return 'i'
                 if(n_corner == 2):
                     if(x[0] == 1 and x[1] == 1 and x[2] == 0 and x[3] == 0):
                         return '='
@@ -53,6 +56,8 @@ def predict(array_feature):
     elif(n_strokes == 1):
         if(n_circle == 0):
             if(n_branch == 0):
+                if(n_corner == 1):
+                    return '.'
                 if(n_corner == 2):
                     if(n_chaincode == 1):
                         if(x[0] == 0 and x[1] == 0 and x[2] == 1 and x[3] == 1):
