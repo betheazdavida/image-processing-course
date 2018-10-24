@@ -34,15 +34,22 @@ def predict(array_feature):
                     if(n_chaincode == 2):
                         return 'N'
                     if(n_chaincode == 0):
-                        if(x[0] == 0 and x[1] == 1 and x[2] == 0 and x[3] == 1):
-                            return '! : j'
+                        if(x[0] == 0 and x[1] == 1 and x[2] == 0 and x[3] == 0):
+                            return ': j'
                         if(x[0] == 1 and x[1] == 0 and x[2] == 0 and x[3] == 0):
                             return 'i'
                 if(n_corner == 2):
-                    if(x[0] == 1 and x[1] == 1 and x[2] == 0 and x[3] == 0):
-                        return '='
-                    if(x[0] == 2 and x[1] == 0 and x[2] == 0 and x[3] == 0):
-                        return ';'
+                    if(n_chaincode == 1):
+                        if(x[0] == 0 and x[1] == 1 and x[2] == 0 and x[3] == 1):
+                            return '!'
+                        if(x[0] == 1 and x[1] == 1 and x[2] == 0 and x[3] == 0):
+                            return '='
+                        if(x[0] == 2 and x[1] == 0 and x[2] == 0 and x[3] == 0):
+                            return '; "'
+                    if(n_chaincode == 2):
+                        return '?'
+                    if(n_chaincode == 4):
+                        return 'g'
             elif(n_branch == 1):
                 if(n_corner == 2):
                     return 'n'
@@ -52,10 +59,14 @@ def predict(array_feature):
             if(n_branch == 0):
                 return 'X'
             elif(n_branch == 1):
+                if(n_corner == 2):
+                    return 'q'
                 if(n_corner == 0):
                     return '9'
                 if(n_corner == 3):
-                    return 'x'          
+                    return 'x' 
+            elif(n_branch == 2):
+                return '$'        
     elif(n_strokes == 1):
         if(n_circle == 0):
             if(n_branch == 0):
@@ -87,7 +98,7 @@ def predict(array_feature):
                         if(x[0] == 0 and x[1] == 2 and x[2] == 0 and x[3] == 0):
                             return 'G'
                         if(x[0] == 1 and x[1] == 0 and x[2] == 0 and x[3] == 1):
-                            return '1 2 ?'
+                            return '1 2'
                         if(x[0] == 1 and x[1] == 1 and x[2] == 0 and x[3] == 0):
                             return '^ u'
                     if(n_chaincode == 3):
@@ -97,8 +108,6 @@ def predict(array_feature):
                             return '5'
                         if(x[0] == 1 and x[1] == 0 and x[2] == 1 and x[3] == 0):
                             return '3'
-                    if(n_chaincode == 4):
-                        return 'g'
                 if(n_corner == 3):
                     return 't'
             elif(n_branch == 1):
@@ -146,15 +155,11 @@ def predict(array_feature):
                         if(x[0] == 1 and x[1] == 0 and x[2] == 0 and x[3] == 0):
                                 return 'b'
                     if(n_chaincode == 4):
-                        if(x[0] == 0 and x[1] == 0 and x[2] == 0 and x[3] == 1):
-                            return 'q'
                         if(x[0] == 0 and x[1] == 0 and x[2] == 1 and x[3] == 0):
                             return 'p'
             elif(n_branch == 2):
                 if(n_corner == 2):
                     return 'A R'
-                if(n_corner == 3):
-                    return '$'
                 if(n_corner == 8):
                     return '#'
         elif(n_circle == 2):
