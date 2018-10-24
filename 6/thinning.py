@@ -137,6 +137,34 @@ def get_feature_from_bone(bone):
 
     datas.append([h,w])
     return datas
+def get_feature_from_array(array_feature):
+    n_strokes = len(array_feature) - 1
+    n_circle = array_feature[0][0]
+    n_branch = len(array_feature[0][1])
+    n_corner = len(array_feature[0][2])
+    n_chaincode = len(array_feature[0][3])
+    h,w = array_feature[-1]
+    upleft = 0
+    upright = 0
+    downleft = 0
+    downright = 0
+    for x in array_feature[0][2]:
+        if(x[0] < h/2 and x[1] < w / 2):
+            upleft += 1
+        if(x[0] < h/2 and x[1] > w / 2):
+            upright += 1
+        if(x[0] > h/2 and x[1] < w / 2):
+            downleft += 1
+        if(x[0] > h/2 and x[1] > w / 2):
+            downright += 1
+    chaincodes = np.zeros(8, dtype = int)
+
+    for m in range (n_strokes):
+        for x in array_feature[m][3]:
+            for n in range(1, len(x) - 1):
+                chaincodes[x[n]] += 1    
+    corner_pos = [upleft, upright, downleft, downright]
+    return [n_strokes,n_circle,n_branch,n_corner,n_chaincode, corner_pos, chaincodes]
 
 def check(i,j):
     global global_image
