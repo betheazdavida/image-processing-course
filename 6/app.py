@@ -185,40 +185,40 @@ def predict_ascii():
 
 if __name__ == "__main__":
     #app.run(host='0.0.0.0',port=8111)
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # app.run(host='0.0.0.0',port=os.environ['PORT'])
 
-    # i = 58
-    # a = []
-    # for nama_file in sorted(glob.glob('images/*')):
-    #     try:
-    #         bone = thinning(nama_file, app.root_path)
-    #         array_feature = get_feature_from_bone(bone)
-    #         n_strokes = len(array_feature) - 1
-    #         n_circle = array_feature[1][0]
-    #         n_branch = len(array_feature[1][1])
-    #         n_corner = len(array_feature[1][2])
-    #         n_chaincode = len(array_feature[1][3])
-    #         h,w = array_feature[-1]
-    #         upleft = 0
-    #         upright = 0
-    #         downleft = 0
-    #         downright = 0
-    #         for x in array_feature[0][2]:
-    #             if(x[0] < h/2 and x[1] < w / 2):
-    #                 upleft += 1
-    #             if(x[0] < h/2 and x[1] > w / 2):
-    #                 upright += 1
-    #             if(x[0] > h/2 and x[1] < w / 2):
-    #                 downleft += 1
-    #             if(x[0] > h/2 and x[1] > w / 2):
-    #                 downright += 1
-    #         corner_pos = [upleft, upright, downleft, downright]
-    #         a.append([chr(i) ,n_strokes,n_circle,n_branch,n_corner,n_chaincode, corner_pos])
+    i = 33
+    a = []
+    for nama_file in sorted(glob.glob('images/*')):
+        try:
+            bone = thinning(nama_file, app.root_path)
+            array_feature = get_feature_from_bone(bone)
+            n_strokes = len(array_feature) - 1
+            n_circle = array_feature[1][0]
+            n_branch = len(array_feature[1][1])
+            n_corner = len(array_feature[1][2])
+            n_chaincode = len(array_feature[1][3])
+            h,w = array_feature[-1]
+            upleft = 0
+            upright = 0
+            downleft = 0
+            downright = 0
+            for x in array_feature[0][2]:
+                if(x[0] < h/2 and x[1] < w / 2):
+                    upleft += 1
+                if(x[0] < h/2 and x[1] > w / 2):
+                    upright += 1
+                if(x[0] > h/2 and x[1] < w / 2):
+                    downleft += 1
+                if(x[0] > h/2 and x[1] > w / 2):
+                    downright += 1
+            corner_pos = [upleft, upright, downleft, downright]
+            a.append([chr(i) ,n_strokes,n_circle,n_branch,n_corner,n_chaincode, corner_pos])
 
-    #     except Exception as e:
-    #         print(chr(i), "Gagal")
-    #     i += 1
-    #     break;
-    # a = sorted(a, key = lambda x: (x[1], x[2], x[3], x[4], x[5], x[6][0], x[6][1], x[6][2], x[6][3]))
-    # for x in a:
-    #     print(x)
+        except Exception as e:
+            print(chr(i), "Gagal")
+        i += 1
+        break;
+    a = sorted(a, key = lambda x: (x[1], x[2], x[3], x[4], x[5], x[6][0], x[6][1], x[6][2], x[6][3]))
+    for x in a:
+        print(x)
