@@ -34,7 +34,7 @@ def predict(array_feature):
                     if(n_chaincode == 2):
                         return 'N'
                     if(n_chaincode == 0):
-                        if(x[0] == 0 and x[1] == 1 and x[2] == 0 and x[3] == 0):
+                        if(x[0] == 0 and x[1] == 1 and x[2] == 0 and x[3] == 1):
                             return '! : j'
                         if(x[0] == 1 and x[1] == 0 and x[2] == 0 and x[3] == 0):
                             return 'i'
