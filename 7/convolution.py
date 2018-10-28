@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 
 def median(arr):
-  return int(np.median([x for x in arr if x != -1]))
+  return sorted(arr)[4]
 
 def gradient(arr):
   return max([abs(arr[0+i]-arr[8-i]) for i in range(4)])

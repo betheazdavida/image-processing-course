@@ -213,6 +213,10 @@
       },
       error: function(error) {
         console.log(error);
+        $("#loading").hide();
+        $("#submit").prop('disabled', false);
+        $('#result').attr('src', '');
+        $('#result').attr('alt', 'Error');
       }
     });
   });
