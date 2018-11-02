@@ -37,6 +37,7 @@
     .noimage {
       text-align: center;
     }
+
     .upload {
       margin: 5px 10px;
       transition: 0.3s;
@@ -59,13 +60,6 @@
       display: none;
     }
 
-    .subtitle {
-      margin-left: 10px;
-      margin-top: 20px;
-      padding: 3px;
-      font-weight: bolder;
-    }
-
     .submit {
       font-weight: bolder;
       font-size: 28px;
@@ -74,19 +68,21 @@
       background-color: #0be881;
       margin-top: 20px;
     }
-
-    .predict {
-      background-color: #f9ca24;
+    
+    .subtitle {
+      margin-left: 10px;
+      margin-top: 20px;
+      padding: 3px;
+      font-weight: bolder;
     }
 
   </style>
 </head>
 <body>
   <div class="container">
-    
     <div class="row">
       <div class="title">
-        <h3>ASCII Predict</h3>
+        <h3>Number Detector</h3>
       </div>
     </div>
 
@@ -102,39 +98,25 @@
           <img class="card hidden" id="outputbef" />
         </div>
 
-        <input id="submit" type="submit" class="card upload submit hidden" value="Generate Bone">
+        <button id="submit" type="button" class="card upload submit hidden">DETECT</button>
 
       </form>
     </div>
 
     <div class="row">
-      <div id="results" class="subtitle">Bone</div>
-      <br /><div id="loading" class="subtitle">Loading...</div>
-      <img id="result" class="card" src="">
-    </div>
-
-    <div class="row">
-      <input id="submit2" type="submit" class="card upload submit hidden predict" value="Predict">
-    </div>
-
-    <div class="row">
-      <div id="results2" class="subtitle">Result: </div>
-      <div id="loading2" class="subtitle">Loading...</div>
-      <div id="result2" class="subtitle"></div>
+      <div id="results" class="subtitle">Result: </div>
+      <div id="loading" class="subtitle">Loading...</div>
+      <div id="result" class="subtitle"></div>
     </div>
 
   </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-  
+
   $("#loading").hide();
   $("#results").hide();
   $("#result").hide();
-
-  $("#submit2").hide();
-  $("#loading2").hide();
-  $("#results2").hide();
 
   var loadFile = function(event) {
     var outputbef = document.getElementById('outputbef');
@@ -150,12 +132,17 @@
     var submit = document.getElementById('submit');
     var submitClass = submit.classList;
     submitClass.remove("hidden");
+
+    var result = document.getElementById('result');
+    var resultClass = result.classList;
+    resultClass.remove("hidden");
+
   };
 
   $('#submit').click(function() {
     var formData = new FormData($('form')[0]);
     $.ajax({
-      url: '/5',
+      url: '/7',
       type: 'POST',
       data: formData,
       processData: false,
@@ -169,36 +156,10 @@
         $("#loading").hide();
         $("#submit").prop('disabled', false);
         $("#result").show();
-        
-        $('#result').attr('src', JSON.parse(response).url_after);
-
-        $("#submit2").show();
+        $('#result').text(JSON.parse(response).angka);
       },
       error: function(error) {
         console.log(error);
-      }
-    });
-  });
-
-  $('#submit2').click(function() {
-    $.ajax({
-      url: '/7',
-      type: 'POST',
-      processData: false,
-      contentType: false,
-      beforeSend: function() {
-        $("#loading2").show();
-        $("#submit2").prop('disabled', true);
-      },
-      success: function(response) {
-        $("#results2").show();
-        $("#loading2").hide();
-        $("#submit2").prop('disabled', false);
-        $("#result2").show();
-        $('#result2').text(JSON.parse(response).karakter);
-      },
-      error: function(error) {
-        console.log(error.statusText);
       }
     });
   });
