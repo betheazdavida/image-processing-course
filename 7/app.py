@@ -188,6 +188,27 @@ def main7get():
     return render_template('7.html', url_before = '', url_after = '')
 
 @app.route("/7", methods=['POST'])
+def main7post():
+    if 'imgFile' not in request.files:
+        return json.dumps({'status':'Error1'})
+    file = request.files['imgFile']
+    if file.filename == '':
+        return json.dumps({'status':'Error2'})
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    image.save(app.root_path + '/' + img_path)
+    chain = build_chaincode(img_path, app.root_path)
+    with open(app.root_path + '/static/pickle/knn_letter.pickle','rb') as handle:
+        knn = pickle.load(handle)
+    pred = knn.predict(chain)
+    return json.dumps({'angka': pred[0]})
+
+
+@app.route("/8", methods=['GET'])
+def main8get():
+    return render_template('8.html', url_before = '', url_after = '')
+
+@app.route("/8", methods=['POST'])
 def convolution():
     if 'imgFile' not in request.files:
         return json.dumps({'status':'Error1'})
