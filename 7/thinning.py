@@ -27,7 +27,7 @@ def thinning(image, root_path):
             else:
                 grayscale = (rgb_image[0] + rgb_image[1] + rgb_image[2]) / 3
 
-            if(grayscale < 75):
+            if(grayscale < 100):
                 quantitized_image[i + 1, j + 1] = 1
     #Algoritma Zhang-suen
     changing1 = changing2 = 1        #  the points to be removed
