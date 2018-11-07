@@ -198,13 +198,12 @@ def predict_letter():
     feature = get_feature_from_array(array_feature)
     if(array_feature != []):
         temp = []
-        for j in range(len(array_feature)):
+        for j in range(len(feature)):
             if(j<=4):
-                temp.append(array_feature[j])
+                temp.append(feature[j])
             else:
-                for k in array_feature[j]:
+                for k in feature[j]:
                     temp.append(k)
-        print(temp)
         karakter = knn.predict([temp])
     else:
         karakter = 'Not Found'
