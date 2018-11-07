@@ -203,7 +203,8 @@ def predict_letter():
             else:
                 for k in array_feature[j]:
                     temp.append(k)
-        karakter = knn.predict([temp])
+        print(temp)
+        karakter = knn.predict(temp)
     else:
         karakter = 'Not Found'
     return json.dumps({'karakter': karakter[0] })
