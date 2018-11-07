@@ -195,13 +195,14 @@ def predict_letter():
     if (app_bone == []):
         return json.dumps({'status':'Error1'})
     array_feature = get_feature_from_bone(app_bone)
+    feature = get_feature_from_array(array_feature)
     if(array_feature != []):
         temp = []
-        for j in range(len(array_feature)):
+        for j in range(len(feature)):
             if(j<=4):
-                temp.append(array_feature[j])
+                temp.append(feature[j])
             else:
-                for k in array_feature[j]:
+                for k in feature[j]:
                     temp.append(k)
         karakter = knn.predict([temp])
     else:
