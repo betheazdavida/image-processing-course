@@ -195,8 +195,9 @@ def predict_letter():
     if (app_bone == []):
         return json.dumps({'status':'Error1'})
     array_feature = get_feature_from_bone(app_bone)
+    feature = get_feature_from_array(array_feature)
     if(array_feature != []):
-        print("array feature ", array_feature)
+        print("array feature ", feature)
         #temp = []
         #for j in range(len(array_feature)):
         #    if(j<=4):
