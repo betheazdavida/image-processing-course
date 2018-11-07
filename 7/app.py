@@ -204,6 +204,7 @@ def predict_letter():
             else:
                 for k in array_feature[j]:
                     temp.append(k)
+        print(temp)
         karakter = knn.predict([temp])
     else:
         karakter = 'Not Found'
