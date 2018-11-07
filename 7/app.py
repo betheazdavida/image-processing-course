@@ -258,23 +258,5 @@ def kernel():
     return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=8111)
-    #app.run(host='0.0.0.0',port=os.environ['PORT'])
-
-    # i = 33
-    # a = []
-    # for nama_file in sorted(glob.glob('images/*')):
-    #     try:
-    #         bone = thinning(nama_file, app.root_path)
-    #         array_feature = get_feature_from_bone(bone)
-    #         feature = get_feature_from_array(array_feature)
-    #         feature.insert(0,chr(i))
-    #         a.append(feature)
-
-    #     except Exception as e:
-    #         print(e)
-
-    #     i += 1
-    # a = sorted(a, key = lambda x: (x[1], x[2], x[3], x[4], x[5], x[6][0], x[6][1], x[6][2], x[6][3]))
-    # for x in a:
-    #     print(x)
+    #app.run(host='0.0.0.0',port=8111)
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
