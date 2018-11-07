@@ -33,3 +33,27 @@ def conv(image, root_path, method):
           arr.append(img_pix[x, y]) if x >= 0 and y >= 0 and x < width and y < height else arr.append(-1)
       new_img_pix[i, j] = median(arr) if method == '1' else gradient(arr) if method == '2' else difference(arr)
   return new_img
+
+def conv_kernel(image, root_path, matrix):
+  # open image
+  img = Image.open(root_path + '/' + image)
+  # convert to grayscale
+  img = img.convert('L')
+  img_pix = img.load()
+
+  new_img = img.copy()
+  new_img_pix = new_img.load()
+  matrix = np.array(matrix)
+  matrix = matrix.flatten()
+  # convolution
+  width, height = img.size
+  for i in range(width):
+    for j in range(height):
+      arr = []
+      for w in [-1, 0, 1]:
+        for h in [-1, 0, 1]:
+          x = i + w
+          y = j + h
+          arr.append(img_pix[x, y]) if x >= 0 and y >= 0 and x < width and y < height else arr.append(0)
+      new_img_pix[i, j] = int(np.dot(matrix, arr))
+  return new_img

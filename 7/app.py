@@ -5,7 +5,7 @@ from normalize import *
 from chaincode import *
 from thinning import *
 from predict_ascii import *
-from convolution import conv
+from convolution import conv, conv_kernel
 import pickle, glob
 import matplotlib
 import numpy as np
@@ -232,9 +232,33 @@ def convolution():
         
     return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
 
+@app.route("/9", methods=['GET'])
+def main9get():
+    return render_template('9.html', url_before = '', url_after = '')
+
+@app.route("/9", methods=['POST'])
+def kernel():
+    if 'imgFile' not in request.files:
+        return json.dumps({'status':'Error1'})
+    file = request.files['imgFile']
+    if file.filename == '':
+        return json.dumps({'status':'Error2'})
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    
+    method = request.form.get('method')
+    image.save(app.root_path + '/' + img_path)
+    matrix = [[1, 0, -1],[2, 0, -2],[1, 0, -1]]
+    new_image = conv_kernel(img_path, app.root_path, matrix)
+
+    norm_img_path = 'static/images/normalized_image.png'
+    new_image.save(app.root_path + '/' + norm_img_path)
+        
+    return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
+
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0',port=8111)
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    app.run(host='0.0.0.0',port=8111)
+    #app.run(host='0.0.0.0',port=os.environ['PORT'])
 
     # i = 33
     # a = []
