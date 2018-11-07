@@ -203,7 +203,7 @@ def predict_letter():
                     temp.append(k)
         with open(app.root_path + '/static/pickle/knn_letter.pickle','rb') as handle:
             knn = pickle.load(handle)
-        karakter = knn.predict(temp)
+        karakter = knn.predict([temp])
     else:
         karakter = 'Not Found'
     return json.dumps({'karakter': karakter[0] })
