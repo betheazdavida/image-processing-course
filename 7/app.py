@@ -190,6 +190,8 @@ def main7get():
 @app.route("/7", methods=['POST'])
 def predict_letter():
     global app_bone
+    with open(app.root_path + '/static/pickle/knn_letter.pickle','rb') as handle:
+        knn = pickle.load(handle)
     if (app_bone == []):
         return json.dumps({'status':'Error1'})
     array_feature = get_feature_from_bone(app_bone)
@@ -201,8 +203,6 @@ def predict_letter():
             else:
                 for k in array_feature[j]:
                     temp.append(k)
-        with open(app.root_path + '/static/pickle/knn_letter.pickle','rb') as handle:
-            knn = pickle.load(handle)
         karakter = knn.predict([temp])
     else:
         karakter = 'Not Found'
