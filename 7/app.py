@@ -197,16 +197,14 @@ def predict_letter():
     array_feature = get_feature_from_bone(app_bone)
     feature = get_feature_from_array(array_feature)
     if(array_feature != []):
-        print("array feature ", feature)
-        #temp = []
-        #for j in range(len(array_feature)):
-        #    if(j<=4):
-        #        temp.append(array_feature[j])
-        #    else:
-        #        for k in array_feature[j]:
-        #            temp.append(k)
-        #print(temp)
-        #karakter = knn.predict([temp])
+        temp = []
+        for j in range(len(array_feature)):
+            if(j<=4):
+                temp.append(array_feature[j])
+            else:
+                for k in array_feature[j]:
+                    temp.append(k)
+        karakter = knn.predict([temp])
     else:
         karakter = 'Not Found'
     return json.dumps({'karakter': karakter[0] })
