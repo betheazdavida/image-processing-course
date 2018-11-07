@@ -188,21 +188,25 @@ def main7get():
     return render_template('7.html', url_before = '', url_after = '')
 
 @app.route("/7", methods=['POST'])
-def main7post():
-    if 'imgFile' not in request.files:
+def predict_letter():
+    global app_bone
+    if (app_bone == []):
         return json.dumps({'status':'Error1'})
-    file = request.files['imgFile']
-    if file.filename == '':
-        return json.dumps({'status':'Error2'})
-    image = request.files['imgFile']
-    img_path = 'static/images/image.png'
-    image.save(app.root_path + '/' + img_path)
-    chain = build_chaincode(img_path, app.root_path)
-    with open(app.root_path + '/static/pickle/knn_letter.pickle','rb') as handle:
-        knn = pickle.load(handle)
-    pred = knn.predict(chain)
-    return json.dumps({'angka': pred[0]})
-
+    array_feature = get_feature_from_bone(app_bone)
+    if(array_feature != []):
+        temp = []
+        for j in range(len(array_feature)):
+            if(j<=4):
+                temp.append(array_feature[j])
+            else:
+                for k in array_feature[j]:
+                    temp.append(k)
+        with open(app.root_path + '/static/pickle/knn_letter.pickle','rb') as handle:
+            knn = pickle.load(handle)
+        karakter = knn.predict(temp)
+    else:
+        karakter = 'Not Found'
+    return json.dumps({'karakter': karakter[0] })
 
 @app.route("/8", methods=['GET'])
 def main8get():
