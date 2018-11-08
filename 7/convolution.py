@@ -35,7 +35,7 @@ def conv(image, root_path, method):
       new_img_pix[i, j] = median(arr) if method == '1' else gradient(arr) if method == '2' else difference(arr)
   return new_img
 
-def conv_kernel(image, root_path, matrixX, matrixY):
+def conv_kernel(image, root_path, matrix):
   # open image
   img = Image.open(root_path + '/' + image)
   # convert to grayscale
@@ -45,9 +45,8 @@ def conv_kernel(image, root_path, matrixX, matrixY):
   new_img = img.copy()
   new_img_pix = new_img.load()
 
-  matrixX = np.array(matrixX)
-  matrixY = np.array(matrixY)
-
+  matrixX = np.array(matrix)
+  matrixY = np.transpose(np.array(matrix))
   matrixX = matrixX.flatten()
   matrixY = matrixY.flatten()
 

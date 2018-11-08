@@ -250,9 +250,13 @@ def kernel():
     method = request.form.get('method')
     image.save(app.root_path + '/' + img_path)
 
-    matrixX = [[1, 0, -1],[2, 0, -2],[1, 0, -1]]
-    matrixY = [[-1, -2, -1],[0, 0, 0],[1, 2, 1]]
-    new_image = conv_kernel(img_path, app.root_path, matrixX, matrixY)
+    Sobell = [[-1, 0, 1],[-2, 0, 2],[-1, 0, 1]]
+    Prewitt = [[-1, -0, -1],[-1, 0, 1],[-1, 0, 1]]
+    Laplace_standar = [[0, -1, 0 ],[-1, 4, -1],[0, -1, 0]]
+    Laplace_diagonal = [[-1, -1, -1],[-1, 8, -1],[-1, -1, -1]]
+    Robert = [[1, 0, 0],[0, -1, 0],[0, 0, 0]]
+    Frei_Chen = [[-1, -1.414, -1],[0, 0, 0],[1, 1.414, 1]]
+    new_image = conv_kernel(img_path, app.root_path, Laplace_standar)
 
     norm_img_path = 'static/images/normalized_image.png'
     new_image.save(app.root_path + '/' + norm_img_path)
@@ -260,5 +264,5 @@ def kernel():
     return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=8111)
-    # app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # app.run(host='0.0.0.0',port=8111)
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
