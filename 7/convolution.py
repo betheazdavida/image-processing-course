@@ -47,8 +47,8 @@ def conv_kernel(image, root_path, matrix):
 
   matrixX = np.array(matrix)
   matrixY = np.transpose(np.array(matrix))
-  matrixX = matrixX.flatten()
-  matrixY = matrixY.flatten()
+  # matrixX = matrixX.flatten()
+  # matrixY = matrixY.flatten()
 
   # convolution
   width, height = img.size

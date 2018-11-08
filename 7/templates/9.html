@@ -72,7 +72,7 @@
     }
 
     .radio {
-      margin: 1px;
+      margin: 6px 3px;
       padding: 8px 6px;
       cursor: pointer;
       border-radius: 5px;
@@ -93,6 +93,21 @@
 
     .radio:hover {
       box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+
+    .matrixContainer {
+      margin: 2px 10px;
+    }
+
+    .box {
+      border-radius: 5px;
+      box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+      width: 80px;
+      height: 48px;
+      margin: 3px 2px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: 22px;
     }
 
     .submit {
@@ -129,15 +144,45 @@
         <div class="hidden" id="um">
           <div class="subtitle">Pick Method</div>
           <div class="radioContainer">
-            <label id="radio1" class="radio checked">&nbsp;&nbsp;Median&nbsp;&nbsp;
+            <label id="radio1" class="radio checked">&nbsp;&nbsp;Sobell&nbsp;&nbsp;
               <input type="radio" onclick="check(1)" name="method" value="1" checked="checked">
             </label>
-            <label id="radio2" class="radio">&nbsp;&nbsp;Gradient&nbsp;&nbsp;
+            <label id="radio2" class="radio">&nbsp;&nbsp;Prewitt&nbsp;&nbsp;
               <input type="radio" onclick="check(2)" name="method" value="2">
             </label>
-            <label id="radio3" class="radio">&nbsp;&nbsp;Difference&nbsp;&nbsp;
+            <label id="radio3" class="radio">&nbsp;&nbsp;Laplace_standar&nbsp;&nbsp;
               <input type="radio" onclick="check(3)" name="method" value="3">
             </label>
+            <label id="radio4" class="radio">&nbsp;&nbsp;Laplace_diagonal&nbsp;&nbsp;
+              <input type="radio" onclick="check(4)" name="method" value="4">
+            </label>
+            <label id="radio5" class="radio">&nbsp;&nbsp;Robert&nbsp;&nbsp;
+              <input type="radio" onclick="check(5)" name="method" value="5">
+            </label>
+            <label id="radio6" class="radio">&nbsp;&nbsp;Frei_Chen&nbsp;&nbsp;
+              <input type="radio" onclick="check(6)" name="method" value="6">
+            </label>
+            <label id="radio7" class="radio">&nbsp;&nbsp;Custom&nbsp;&nbsp;
+              <input type="radio" onclick="check(7)" name="method" value="7">
+            </label>
+          </div>
+          <div class="subtitle" style="margin-top: 6px;">Matrix</div>
+          <div class="matrixContainer">
+            <div class="rows">
+              <input id="input1" name="input1" class="box" type="text" disabled>
+              <input id="input2" name="input2" class="box" type="text" disabled>
+              <input id="input3" name="input3" class="box" type="text" disabled>
+            </div>
+            <div class="rows">
+              <input id="input4" name="input4" class="box" type="text" disabled>
+              <input id="input5" name="input5" class="box" type="text" disabled>
+              <input id="input6" name="input6" class="box" type="text" disabled>
+            </div>
+            <div class="rows">
+              <input id="input7" name="input7" class="box" type="text" disabled>
+              <input id="input8" name="input8" class="box" type="text" disabled>
+              <input id="input9" name="input9" class="box" type="text" disabled>
+            </div>
           </div>
         </div>
 
@@ -181,19 +226,62 @@
     submitClass.remove("hidden");
   };
 
+  var Sobell = [-1, 0, 1, -2, 0, 2, -1, 0, 1];
+  var Prewitt = [-1, -0, -1, -1, 0, 1, -1, 0, 1];
+  var Laplace_standar = [0, -1, 0 , -1, 4, -1, 0, -1, 0];
+  var Laplace_diagonal = [-1, -1, -1, -1, 8, -1, -1, -1, -1];
+  var Robert = [1, 0, 0, 0, -1, 0, 0, 0, 0];
+  var Frei_Chen = [-1, -1.414, -1, 0, 0, 0, 1, 1.414, 1];
+
+  var initMatrix = function(arr) {
+    for (var i = 1; i < arr.length + 1; i++) {
+      $('#input'+i).val(arr[i-1]);
+    }
+  }
+
+  initMatrix(Sobell);
+
   var checkedRadio = 1;
   var check = function(id) {
+
     var radio = document.getElementById('radio'+checkedRadio);
     var radioClass = radio.classList;
     radioClass.remove("checked")
+
     var radio = document.getElementById('radio'+id);
     var radioClass = radio.classList;
     radioClass.add("checked")
+
     checkedRadio = id;
+    if (checkedRadio == 7) { // custom
+      for (var i = 1; i < 10; i++) {
+        $("#input"+i).prop('disabled', false);
+      }
+    } else {
+      if (checkedRadio == 1) {
+        initMatrix(Sobell);
+      } else if (checkedRadio == 2) {
+        initMatrix(Prewitt);
+      } else if (checkedRadio == 3) {
+        initMatrix(Laplace_standar);
+      } else if (checkedRadio == 4) {
+        initMatrix(Laplace_diagonal);
+      } else if (checkedRadio == 5) {
+        initMatrix(Robert);
+      } else {
+        initMatrix(Frei_Chen);
+      }
+      for (var i = 1; i < 10; i++) {
+        $("#input"+i).prop('disabled', true);
+      }
+    }
   };
 
   $('#submit').click(function() {
     var formData = new FormData($('form')[0]);
+    for (var i = 1; i < 10; i++) {
+      formData.append("input"+i, $("#input"+i).val());
+    }
     $.ajax({
       url: '/9',
       type: 'POST',

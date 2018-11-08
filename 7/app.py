@@ -250,13 +250,11 @@ def kernel():
     method = request.form.get('method')
     image.save(app.root_path + '/' + img_path)
 
-    Sobell = [[-1, 0, 1],[-2, 0, 2],[-1, 0, 1]]
-    Prewitt = [[-1, -0, -1],[-1, 0, 1],[-1, 0, 1]]
-    Laplace_standar = [[0, -1, 0 ],[-1, 4, -1],[0, -1, 0]]
-    Laplace_diagonal = [[-1, -1, -1],[-1, 8, -1],[-1, -1, -1]]
-    Robert = [[1, 0, 0],[0, -1, 0],[0, 0, 0]]
-    Frei_Chen = [[-1, -1.414, -1],[0, 0, 0],[1, 1.414, 1]]
-    new_image = conv_kernel(img_path, app.root_path, Laplace_standar)
+    matrix = []
+    for i in range(9):
+        matrix.append(float(request.form.get('input'+str(i+1))))
+
+    new_image = conv_kernel(img_path, app.root_path, matrix)
 
     norm_img_path = 'static/images/normalized_image.png'
     new_image.save(app.root_path + '/' + norm_img_path)
