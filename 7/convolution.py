@@ -1,4 +1,5 @@
 from PIL import Image
+from math import sqrt
 import numpy as np
 
 def median(arr):
@@ -34,7 +35,7 @@ def conv(image, root_path, method):
       new_img_pix[i, j] = median(arr) if method == '1' else gradient(arr) if method == '2' else difference(arr)
   return new_img
 
-def conv_kernel(image, root_path, matrix):
+def conv_kernel(image, root_path, matrixX, matrixY):
   # open image
   img = Image.open(root_path + '/' + image)
   # convert to grayscale
@@ -43,8 +44,13 @@ def conv_kernel(image, root_path, matrix):
 
   new_img = img.copy()
   new_img_pix = new_img.load()
-  matrix = np.array(matrix)
-  matrix = matrix.flatten()
+
+  matrixX = np.array(matrixX)
+  matrixY = np.array(matrixY)
+
+  matrixX = matrixX.flatten()
+  matrixY = matrixY.flatten()
+
   # convolution
   width, height = img.size
   for i in range(width):
@@ -55,5 +61,5 @@ def conv_kernel(image, root_path, matrix):
           x = i + w
           y = j + h
           arr.append(img_pix[x, y]) if x >= 0 and y >= 0 and x < width and y < height else arr.append(0)
-      new_img_pix[i, j] = int(np.dot(matrix, arr))
+      new_img_pix[i, j] = int(sqrt((np.dot(matrixX, arr)**2)+(np.dot(matrixY, arr)**2)))
   return new_img
