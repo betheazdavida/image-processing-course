@@ -10,7 +10,6 @@ import pickle, glob
 import matplotlib
 import numpy as np
 matplotlib.use('Agg')
-
 from matplotlib import pyplot as plt
 from PIL import Image
 from scipy.misc import toimage
@@ -276,11 +275,11 @@ def main10():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    color_representation = [[177, 131, 110, 255],[ 99,  72,  56, 255],[143, 104,  85, 255],[195, 157, 143, 255]]
     size = 224, 282
-    img = Image.open(app.root_path + '/' + img_path)
-    img.thumbnail(size, Image.ANTIALIAS)
-    img = np.array(img)
+    image = Image.open(app.root_path + '/' + img_path)
+    image.thumbnail(size, Image.ANTIALIAS)
+    img = np.array(image)
+    color_representation = np.array([[177,131,110],[99,72,56],[143,104,85],[195,157,143]])
     height, width, _ = img.shape
     new_image = np.zeros((img.shape[0], img.shape[1]))
     for y in range(height):
@@ -303,14 +302,12 @@ def main10():
     row_mean, row_var = np.mean(row), np.sqrt(np.var(row))
     upper_bound = (int(col_mean - 2 * col_var), int(row_mean - 2 * row_var))
     lower_bound = (int(col_mean + 2 * col_var), int(row_mean + 2 *row_var))
-
     x1,y1 = upper_bound
     x2,y2 = lower_bound
-    new_image =  new_image[x1:x2,y1:y2]
-    norm_img_path = 'static/images/face_detected_image.png'
-    new_image.save(app.root_path + '/' + norm_img_path)
-        
-    return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
+    cropped_image = image.crop([x1,y1,x2,y2])
+    cropped_img_path = 'static/images/face_detected_image.png'
+    cropped_image.save(cropped_img_path)
+    return json.dumps({'url_after': cropped_img_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0',port=8111)
