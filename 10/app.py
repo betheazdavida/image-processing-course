@@ -261,6 +261,27 @@ def kernel():
         
     return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
 
+@app.route("/10", methods=['GET'])
+def main10get():
+    return render_template('10.html', url_before = '', url_after = '')
+
+@app.route("/10", methods=['POST'])
+def main10():
+    if 'imgFile' not in request.files:
+        return json.dumps({'status':'Error1'})
+    file = request.files['imgFile']
+    if file.filename == '':
+        return json.dumps({'status':'Error2'})
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    image.save(app.root_path + '/' + img_path)
+    to_edit = Image.open(app.root_path + '/' + img_path)
+    new_image = equalize(to_edit, equalizers, app.root_path)
+    norm_img_path = 'static/images/normalized_image.png'
+    new_image.save(app.root_path + '/' + norm_img_path)
+        
+    return json.dumps({'url_after': norm_img_path + '?' + str(time.time()) })
+
 if __name__ == "__main__":
     # app.run(host='0.0.0.0',port=8111)
     app.run(host='0.0.0.0',port=os.environ['PORT'])
