@@ -3,4 +3,4 @@ matplotlib
 pillow
 sklearn
 scipy
-opencv-python
+numpy

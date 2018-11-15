@@ -14,7 +14,7 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 from PIL import Image
 from scipy.misc import toimage
-import cv2
+import numpy as np
 
 import time
 
@@ -276,10 +276,11 @@ def main10():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    color_representation = [[195, 157, 143],[143, 104,  85],[100,  72,  57],[177, 131, 110]]
-    img = cv2.imread(app.root_path + '/' + img_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img, (224, 282))
+    color_representation = [[177, 131, 110, 255],[ 99,  72,  56, 255],[143, 104,  85, 255],[195, 157, 143, 255]]
+    size = 224, 282
+    img = Image.open(app.root_path + '/' + img_path)
+    img.thumbnail(size, Image.ANTIALIAS)
+    img = np.array(img)
     height, width, _ = img.shape
     new_image = np.zeros((img.shape[0], img.shape[1]))
     for y in range(height):
@@ -292,8 +293,8 @@ def main10():
             diff = np.min(np.linalg.norm(diff, axis=1)) / 390.0
             new_image[y][x] = int(diff * 255.0)
     new_image = np.heaviside(new_image.astype(float) - 10, 0)
-    sum_per_col = np.sum(1 - img_t, axis=0).astype(np.int)
-    sum_per_row = np.sum(1 - img_t, axis=1).astype(np.int)
+    sum_per_col = np.sum(1 - new_image, axis=0).astype(np.int)
+    sum_per_row = np.sum(1 - new_image, axis=1).astype(np.int)
 
     col = np.repeat(np.arange(len(sum_per_col)), sum_per_col)
     row = np.repeat(np.arange(len(sum_per_row)), sum_per_row)
@@ -303,7 +304,9 @@ def main10():
     upper_bound = (int(col_mean - 2 * col_var), int(row_mean - 2 * row_var))
     lower_bound = (int(col_mean + 2 * col_var), int(row_mean + 2 *row_var))
 
-    cv2.rectangle(new_image, upper_bound, lower_bound, (255,0,0))
+    x1,y1 = upper_bound
+    x2,y2 = lower_bound
+    new_image =  new_image[x1:x2,y1:y2]
     norm_img_path = 'static/images/face_detected_image.png'
     new_image.save(app.root_path + '/' + norm_img_path)
         
