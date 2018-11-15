@@ -306,7 +306,7 @@ def main10():
     x2,y2 = lower_bound
     cropped_image = image.crop([x1,y1,x2,y2])
     cropped_img_path = 'static/images/face_detected_image.png'
-    cropped_image.save(cropped_img_path)
+    cropped_image.save(app.root_path  + '/' + cropped_img_path)
     return json.dumps({'url_after': cropped_img_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
