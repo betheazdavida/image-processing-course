@@ -11,7 +11,7 @@ import matplotlib
 import numpy as np
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
-from PIL import Image
+from PIL import Image, ImageDraw
 from scipy.misc import toimage
 import numpy as np
 
@@ -304,10 +304,15 @@ def main10():
     lower_bound = (int(col_mean + 2 * col_var), int(row_mean + 2 *row_var))
     x1,y1 = upper_bound
     x2,y2 = lower_bound
-    cropped_image = image.crop([x1,y1,x2,y2])
-    cropped_img_path = 'static/images/face_detected_image.png'
-    cropped_image.save(app.root_path  + '/' + cropped_img_path)
-    return json.dumps({'url_after': cropped_img_path + '?' + str(time.time()) })
+
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(((x1 + 1, y1 + 1), (x2 - 1, y2 - 1)), fill=None, outline="red")
+
+    # new_image = image.crop([x1,y1,x2,y2])
+    new_image = image
+    new_image_path = 'static/images/face_detected_image.png'
+    new_image.save(app.root_path  + '/' + new_image_path)
+    return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0',port=8111)
