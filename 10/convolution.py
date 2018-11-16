@@ -11,7 +11,7 @@ def gradient(arr):
 def difference(arr):
   return max([abs(arr[i]-arr[4]) for i in range(9)])
 
-def conv(image, root_path, method):
+def conv(image, root_path, method, padding):
   # open image
   img = Image.open(root_path + '/' + image)
   
@@ -31,7 +31,7 @@ def conv(image, root_path, method):
         for h in [-1, 0, 1]:
           x = i + w
           y = j + h
-          arr.append(img_pix[x, y]) if x >= 0 and y >= 0 and x < width and y < height else arr.append(-1)
+          arr.append(img_pix[x, y]) if x >= 0 and y >= 0 and x < width and y < height else arr.append(padding)
       new_img_pix[i, j] = median(arr) if method == '1' else gradient(arr) if method == '2' else difference(arr)
   return new_img
 

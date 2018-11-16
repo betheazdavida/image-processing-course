@@ -5,6 +5,7 @@ from normalize import *
 from chaincode import *
 from thinning import *
 from predict_ascii import *
+from faceboundary import *
 from convolution import conv, conv_kernel
 import pickle, glob
 import matplotlib
@@ -226,7 +227,7 @@ def convolution():
     method = request.form.get('method')
     image.save(app.root_path + '/' + img_path)
 
-    new_image = conv(img_path, app.root_path, method)
+    new_image = conv(img_path, app.root_path, method, 0)
 
     norm_img_path = 'static/images/normalized_image.png'
     new_image.save(app.root_path + '/' + norm_img_path)
@@ -267,6 +268,7 @@ def main10get():
 
 @app.route("/10", methods=['POST'])
 def main10():
+    
     if 'imgFile' not in request.files:
         return json.dumps({'status':'Error1'})
     file = request.files['imgFile']
@@ -275,40 +277,31 @@ def main10():
     image = request.files['imgFile']
     img_path = 'static/images/image.png'
     image.save(app.root_path + '/' + img_path)
-    size = 224, 282
+    size = 480, 480
     image = Image.open(app.root_path + '/' + img_path)
     image.thumbnail(size, Image.ANTIALIAS)
+    image.save(app.root_path + '/' + img_path)
+
     img = np.array(image)
-    color_representation = np.array([[177,131,110],[99,72,56],[143,104,85],[195,157,143]])
     height, width, _ = img.shape
     new_image = np.zeros((img.shape[0], img.shape[1]))
     for y in range(height):
         for x in range(width):
-            diff = np.repeat(
-                np.array([img[y][x]]),
-                len(color_representation),
-                axis=0
-            ) - color_representation
-            diff = np.min(np.linalg.norm(diff, axis=1)) / 390.0
-            new_image[y][x] = int(diff * 255.0)
-    new_image = np.heaviside(new_image.astype(float) - 10, 0)
-    sum_per_col = np.sum(1 - new_image, axis=0).astype(np.int)
-    sum_per_row = np.sum(1 - new_image, axis=1).astype(np.int)
+            if(img[y][x][0] > 95 and img[y][x][1] > 40 and img[y][x][2] > 20 and img[y][x][0] > img[y][x][1] and img[y][x][0] > img[y][x][2]
+            and abs( img[y][x][0] - img[y][x][1]) > 15):
+                new_image[y][x] = 1
+            else:
+                new_image[y][x] = 0
 
-    col = np.repeat(np.arange(len(sum_per_col)), sum_per_col)
-    row = np.repeat(np.arange(len(sum_per_row)), sum_per_row)
-
-    col_mean, col_var = np.mean(col), np.sqrt(np.var(col))
-    row_mean, row_var = np.mean(row), np.sqrt(np.var(row))
-    upper_bound = (int(col_mean - 2 * col_var), int(row_mean - 2 * row_var))
-    lower_bound = (int(col_mean + 2 * col_var), int(row_mean + 2 *row_var))
-    x1,y1 = upper_bound
-    x2,y2 = lower_bound
+    new_image = Image.fromarray(np.uint8(new_image*255))
+    new_image_path = 'static/images/face_raw_image.png'
+    new_image.save(app.root_path  + '/' + new_image_path)
+    bounds = face_boundary(new_image_path, app.root_path)
 
     draw = ImageDraw.Draw(image)
-    draw.rectangle(((x1 + 1, y1 + 1), (x2 - 1, y2 - 1)), fill=None, outline="red")
+    for b in bounds:
+        draw.rectangle(((b[1] + 1, b[3] + 1), (b[0] - 1, b[2] - 1)), fill=None, outline="red")
 
-    # new_image = image.crop([x1,y1,x2,y2])
     new_image = image
     new_image_path = 'static/images/face_detected_image.png'
     new_image.save(app.root_path  + '/' + new_image_path)
