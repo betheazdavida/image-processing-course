@@ -287,11 +287,15 @@ def main10():
     new_image = np.zeros((img.shape[0], img.shape[1]))
     for y in range(height):
         for x in range(width):
-            if(img[y][x][0] > 95 and img[y][x][1] > 40 and img[y][x][2] > 20 and img[y][x][0] > img[y][x][1] and img[y][x][0] > img[y][x][2]
-            and abs( img[y][x][0] - img[y][x][1]) > 15):
+            R = img[y][x][0]
+            G = img[y][x][1]
+            B = img[y][x][2]
+            Y = 16 + (65.738/256)*R + (129.057/256*G) + (25.064/256)*B
+            Cb = 128 - (37.945/256)*R - (74.494/256*G) + (112.439/256)*B
+            Cr = 128 + (112.439/256)*R - (94.154/256*G) - (18.285/256)*B
+            if(R > 95 and G > 40 and B > 20 and R > G and R > B and abs( R - G) > 15 and Cr > 135 and Cb > 85 and Y > 80 and Cr <= (1.5862*Cb) + 20
+                and Cr >= 0.3448*Cb + 76.2069 and Cr >= (-4.5652*Cb)+234.5625 and Cr <= (-1.15*Cb)+301.75 and Cr <= (-2.2857*Cb)+432.85):
                 new_image[y][x] = 1
-            else:
-                new_image[y][x] = 0
 
     new_image = Image.fromarray(np.uint8(new_image*255))
     new_image_path = 'static/images/face_raw_image.png'
@@ -308,5 +312,5 @@ def main10():
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0',port=8111)
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    app.run(host='0.0.0.0',port=8111)
+    # app.run(host='0.0.0.0',port=os.environ['PORT'])
