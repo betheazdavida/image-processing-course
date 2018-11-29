@@ -301,10 +301,47 @@ def main10():
     new_image_path = 'static/images/face_raw_image.png'
     new_image.save(app.root_path  + '/' + new_image_path)
     bounds = face_boundary(new_image_path, app.root_path)
-
     draw = ImageDraw.Draw(image)
+    
     for b in bounds:
         draw.rectangle(((b[1] + 1, b[3] + 1), (b[0] - 1, b[2] - 1)), fill=None, outline="red")
+    
+        # left, top
+        # right, below
+        face_top = b[3]
+        face_below = b[2]
+        face_left = b[1]
+        face_right = b[0]
+        face_height = b[2] - b[3]
+        face_width = b[0] - b[1]
+        
+        mouth_top = face_top + (2.4 * (face_height/3.7))
+        mouth_below = face_below - (0.1 * face_height)
+        mouth_right = face_right - (0.19 * face_width)
+        mouth_left = face_left + (0.21 * face_width)
+        draw.rectangle(((mouth_left, mouth_top), (mouth_right, mouth_below)), fill=None, outline="#81ecec")
+        arr_mouth = [mouth_left, mouth_top, mouth_right, mouth_below]
+        mouth_bounds = object_boundary(new_image_path, app.root_path, arr_mouth, "mouth")
+        minb1, minb3 = 999, 999
+        maxb0, maxb2 = 0, 0
+        for mb in mouth_bounds:
+            # draw.rectangle(((mb[1] + 1, mb[3] + 1), (mb[0] - 1, mb[2] - 1)), fill=None, outline="#0984e3")
+            if maxb0 < mb[0]: maxb0 = mb[0]
+            if maxb2 < mb[2]: maxb2 = mb[2]
+            if minb1 > mb[1]: minb1 = mb[1]
+            if minb3 > mb[3]: minb3 = mb[3]
+        print(minb1, minb3, maxb0, maxb2)
+        draw.rectangle(((minb1 + 1, minb3 + 1), (maxb0 - 1, maxb2 - 1)), fill=None, outline="#0984e3")
+
+        eye_top = face_top + (0.2 * face_height)
+        eye_below = face_below - (0.5 * face_height)
+        eye_right = face_right - (0.1 * face_width)
+        eye_left = face_left + (0.1 * face_width)
+        draw.rectangle(((eye_left, eye_top), (eye_right, eye_below)), fill=None, outline="#55efc4")
+        arr_eye = [eye_left, eye_top, eye_right, eye_below]
+        eye_bounds = object_boundary(new_image_path, app.root_path, arr_eye, "eye")
+        for eb in eye_bounds:
+            draw.rectangle(((eb[1] + 1, eb[3] + 1), (eb[0] - 1, eb[2] - 1)), fill=None, outline="#e84393")
 
     new_image = image
     new_image_path = 'static/images/face_detected_image.png'
