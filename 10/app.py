@@ -330,7 +330,7 @@ def main10():
             if maxb2 < mb[2]: maxb2 = mb[2]
             if minb1 > mb[1]: minb1 = mb[1]
             if minb3 > mb[3]: minb3 = mb[3]
-        if minb1 != 0:
+        if minb1 != 999:
             draw.rectangle(((minb1 - 1, minb3 - 1), (maxb0 + 1, maxb2 + 1)), fill=None, outline="#0984e3")
 
         eye_top = face_top + (0.2 * face_height)
