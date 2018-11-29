@@ -331,7 +331,7 @@ def main10():
             if minb1 > mb[1]: minb1 = mb[1]
             if minb3 > mb[3]: minb3 = mb[3]
         print(minb1, minb3, maxb0, maxb2)
-        draw.rectangle(((minb1 + 1, minb3 + 1), (maxb0 - 1, maxb2 - 1)), fill=None, outline="#0984e3")
+        draw.rectangle(((minb1 - 1, minb3 - 1), (maxb0 + 1, maxb2 + 1)), fill=None, outline="#0984e3")
 
         eye_top = face_top + (0.2 * face_height)
         eye_below = face_below - (0.5 * face_height)
@@ -341,7 +341,7 @@ def main10():
         arr_eye = [eye_left, eye_top, eye_right, eye_below]
         eye_bounds = object_boundary(new_image_path, app.root_path, arr_eye, "eye")
         for eb in eye_bounds:
-            draw.rectangle(((eb[1] + 1, eb[3] + 1), (eb[0] - 1, eb[2] - 1)), fill=None, outline="#e84393")
+            draw.rectangle(((eb[1]-1, eb[3]-1), (eb[0]+1, eb[2]+1)), fill=None, outline="#e84393")
 
     new_image = image
     new_image_path = 'static/images/face_detected_image.png'

@@ -125,10 +125,10 @@ def object_boundary(image, root_path, arr, obj):
                 print("density: " + str(density))
                 
                 if obj == "mouth":
-                    if(del_x > 5 and del_y > 2 and del_x > del_y and density > 10):
+                    if(del_x > 5 and del_y > 1 and del_x > del_y and density > 12 and del_x/del_y > 3):
                         bounds.append(bound)
                     
                 elif obj == "eye":
-                    if(del_x > 18 and del_y > 4 and del_x > del_y and density > 70):
+                    if(del_x > 6 and del_y > 2 and del_x > del_y and density > 30):
                         bounds.append(bound)
     return bounds
