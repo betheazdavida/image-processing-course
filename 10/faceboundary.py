@@ -68,15 +68,22 @@ def face_detect(image, raw_image, root_path):
         for eb in eye_bounds:
             draw.rectangle(((eb[1]-1, eb[3]-1), (eb[0]+1, eb[2]+1)), fill=None, outline="#e84393")
 
-        nose_top = face_top + (0.38 * face_height)
-        nose_below = face_below - (0.22 * face_height)
-        nose_right = face_right - (0.25 * face_width)
-        nose_left = face_left + (0.25 * face_width)
+        nose_top = face_top + (0.45 * face_height)
+        nose_below = face_below - (0.29 * face_height)
+        nose_right = face_right - (0.26 * face_width)
+        nose_left = face_left + (0.26 * face_width)
         draw.rectangle(((nose_left, nose_top), (nose_right, nose_below)), fill=None, outline="#55efc4")
         arr_nose = [nose_left, nose_top, nose_right, nose_below]
-        nose_bounds = object_boundary(raw_image, root_path, arr_nose, "nose")
+        nose_bounds = object_boundary(new_image_path, root_path, arr_nose, "nose")
+        minb1, minb3 = 999, 999
+        maxb0, maxb2 = 0, 0
         for nb in nose_bounds:
-            draw.rectangle(((nb[1]-1, nb[3]-1), (nb[0]+1, nb[2]+1)), fill=None, outline="#e67e22")
+            if maxb0 < nb[0]: maxb0 = nb[0]
+            if maxb2 < nb[2]: maxb2 = nb[2]
+            if minb1 > nb[1]: minb1 = nb[1]
+            if minb3 > nb[3]: minb3 = nb[3]
+        if minb1 != 999:
+            draw.rectangle(((minb1 - 6, minb3 - 10), (maxb0 + 6, maxb2 + 1)), fill=None, outline="#e67e22")
 
     new_image = image
     new_image_path = 'static/images/face_detected_image.png'
@@ -213,6 +220,6 @@ def object_boundary(image, root_path, arr, obj):
 
                 elif obj == "nose":
                     delxy = abs(del_x - del_y)
-                    if(del_y - del_x < 3 and delxy <= 7 and 23 <= density and density <= 70):
+                    if(del_y - del_x < 3 and delxy <= 8 and 23 <= density and density <= 80 and (del_x*del_y)/2.0 < density):
                         bounds.append(bound)
     return bounds
