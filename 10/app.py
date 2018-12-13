@@ -12,7 +12,6 @@ import matplotlib
 import numpy as np
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
-from PIL import Image, ImageDraw
 from scipy.misc import toimage
 import numpy as np
 
@@ -281,81 +280,30 @@ def main10():
     image = Image.open(app.root_path + '/' + img_path)
     image.thumbnail(size, Image.ANTIALIAS)
     image.save(app.root_path + '/' + img_path)
+    new_image_path ,_, _, _ = face_detect(img_path, app.root_path)
+    return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
-    img = np.array(image)
-    height, width, _ = img.shape
-    new_image = np.zeros((img.shape[0], img.shape[1]))
-    for y in range(height):
-        for x in range(width):
-            R = img[y][x][0]
-            G = img[y][x][1]
-            B = img[y][x][2]
-            Y = 16 + (65.738/256)*R + (129.057/256*G) + (25.064/256)*B
-            Cb = 128 - (37.945/256)*R - (74.494/256*G) + (112.439/256)*B
-            Cr = 128 + (112.439/256)*R - (94.154/256*G) - (18.285/256)*B
-            if(R > 95 and G > 40 and B > 20 and R > G and R > B and abs( R - G) > 15 and Cr > 135 and Cb > 85 and Y > 80 and Cr <= (1.5862*Cb) + 20
-                and Cr >= 0.3448*Cb + 76.2069 and Cr >= (-4.5652*Cb)+234.5625 and Cr <= (-1.15*Cb)+301.75 and Cr <= (-2.2857*Cb)+432.85):
-                new_image[y][x] = 1
+@app.route("/11", methods=['GET'])
+def main11get():
+    return render_template('11.html', url_before = '', url_after = '')
 
-    new_image = Image.fromarray(np.uint8(new_image*255))
-    new_image_path = 'static/images/face_raw_image.png'
-    new_image.save(app.root_path  + '/' + new_image_path)
-    bounds = face_boundary(new_image_path, app.root_path)
-    draw = ImageDraw.Draw(image)
+@app.route("/11", methods=['POST'])
+def main11():
     
-    for b in bounds:
-        draw.rectangle(((b[1] + 1, b[3] + 1), (b[0] - 1, b[2] - 1)), fill=None, outline="red")
-    
-        # left, top
-        # right, below
-        face_top = b[3]
-        face_below = b[2]
-        face_left = b[1]
-        face_right = b[0]
-        face_height = b[2] - b[3]
-        face_width = b[0] - b[1]
-        
-        mouth_top = face_top + (2.4 * (face_height/3.7))
-        mouth_below = face_below - (0.1 * face_height)
-        mouth_right = face_right - (0.19 * face_width)
-        mouth_left = face_left + (0.21 * face_width)
-        draw.rectangle(((mouth_left, mouth_top), (mouth_right, mouth_below)), fill=None, outline="#81ecec")
-        arr_mouth = [mouth_left, mouth_top, mouth_right, mouth_below]
-        mouth_bounds = object_boundary(new_image_path, app.root_path, arr_mouth, "mouth")
-        minb1, minb3 = 999, 999
-        maxb0, maxb2 = 0, 0
-        for mb in mouth_bounds:
-            # draw.rectangle(((mb[1] + 1, mb[3] + 1), (mb[0] - 1, mb[2] - 1)), fill=None, outline="#0984e3")
-            if maxb0 < mb[0]: maxb0 = mb[0]
-            if maxb2 < mb[2]: maxb2 = mb[2]
-            if minb1 > mb[1]: minb1 = mb[1]
-            if minb3 > mb[3]: minb3 = mb[3]
-        if minb1 != 999:
-            draw.rectangle(((minb1 - 1, minb3 - 1), (maxb0 + 1, maxb2 + 1)), fill=None, outline="#0984e3")
-
-        eye_top = face_top + (0.2 * face_height)
-        eye_below = face_below - (0.5 * face_height)
-        eye_right = face_right - (0.1 * face_width)
-        eye_left = face_left + (0.1 * face_width)
-        draw.rectangle(((eye_left, eye_top), (eye_right, eye_below)), fill=None, outline="#55efc4")
-        arr_eye = [eye_left, eye_top, eye_right, eye_below]
-        eye_bounds = object_boundary(new_image_path, app.root_path, arr_eye, "eye")
-        for eb in eye_bounds:
-            draw.rectangle(((eb[1]-1, eb[3]-1), (eb[0]+1, eb[2]+1)), fill=None, outline="#e84393")
-
-        nose_top = face_top + (0.38 * face_height)
-        nose_below = face_below - (0.22 * face_height)
-        nose_right = face_right - (0.25 * face_width)
-        nose_left = face_left + (0.25 * face_width)
-        draw.rectangle(((nose_left, nose_top), (nose_right, nose_below)), fill=None, outline="#55efc4")
-        arr_nose = [nose_left, nose_top, nose_right, nose_below]
-        nose_bounds = object_boundary(new_image_path, app.root_path, arr_nose, "nose")
-        for nb in nose_bounds:
-            draw.rectangle(((nb[1]-1, nb[3]-1), (nb[0]+1, nb[2]+1)), fill=None, outline="#e67e22")
-
-    new_image = image
-    new_image_path = 'static/images/face_detected_image.png'
-    new_image.save(app.root_path  + '/' + new_image_path)
+    if 'imgFile' not in request.files:
+        return json.dumps({'status':'Error1'})
+    file = request.files['imgFile']
+    if file.filename == '':
+        return json.dumps({'status':'Error2'})
+    image = request.files['imgFile']
+    img_path = 'static/images/image.png'
+    image.save(app.root_path + '/' + img_path)
+    size = 480, 480
+    image = Image.open(app.root_path + '/' + img_path)
+    image.thumbnail(size, Image.ANTIALIAS)
+    image.save(app.root_path + '/' + img_path)
+    new_image_path ,a, b, c = face_detect(img_path, 'static/images/face_raw_image.png', app.root_path)
+    print(a,b,c)
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
