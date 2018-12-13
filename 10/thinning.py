@@ -18,7 +18,7 @@ def thinning(image, root_path):
         for j in range(h):
             rgb_image = image[j, i]
             if(isinstance(rgb_image, int)):
-                grayscale = 0
+                grayscale = rgb_image
             elif (len(rgb_image) == 4):
                 if (rgb_image[3] > 0):
                     grayscale = (rgb_image[0] + rgb_image[1] + rgb_image[2]) / 3
@@ -61,6 +61,7 @@ def thinning(image, root_path):
             quantitized_image[x][y] = 0
 
     return quantitized_image
+
 
 def neighbours(x,y,image):
     # "Return 8-neighbours of image point P1(x,y), in a clockwise order"

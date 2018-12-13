@@ -6,9 +6,11 @@ from chaincode import *
 from thinning import *
 from predict_ascii import *
 from faceboundary import *
+from facerecognition import *
 from convolution import conv, conv_kernel
 import pickle, glob
 import matplotlib
+import datas
 import numpy as np
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
@@ -281,7 +283,7 @@ def main10():
     image.thumbnail(size, Image.ANTIALIAS)
     image.save(app.root_path + '/' + img_path)
     raw_img_path = 'static/images/face_raw_image.png'
-    new_image_path ,_, _, _ = face_detect(img_path, raw_img_path, app.root_path)
+    new_image_path ,_, _, _, _ = face_detect(img_path, raw_img_path, app.root_path)
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 @app.route("/11", methods=['GET'])
@@ -303,26 +305,20 @@ def main11():
     image = Image.open(app.root_path + '/' + img_path)
     image.thumbnail(size, Image.ANTIALIAS)
     image.save(app.root_path + '/' + img_path)
+    #find face boundary
     raw_img_path = 'static/images/face_raw_image.png'
-    new_image_path , mouth_bounds, eye_bounds, nose_bounds = face_detect(img_path, raw_img_path, app.root_path)
-    raw_img = Image.open(app.root_path + '/' + raw_img_path)
-    raw_img = np.array(raw_img)
-    height, width = raw_img.shape
-    for y in range(height):
-        for x in range(width):
-            if(raw_img[y][x] == 255):
-                continue
-            inside_bound = False
-            for bound in mouth_bounds + eye_bounds + nose_bounds:
-                if(x <= bound[0] and x >= bound[1] and y <= bound[2] and y >= bound[3]):
-                    inside_bound = True
-            if(not(inside_bound)):
-                raw_img[y][x] = 255
-    raw_img = Image.fromarray(np.uint8(raw_img))
-    raw_img.save(app.root_path  + '/' + raw_img_path)
-    print(mouth_bounds + eye_bounds + nose_bounds)
+    _ , bounds, _ , _, _ = face_detect(img_path, raw_img_path, app.root_path)
+    print (bounds)
+    image.crop((bounds[0][1],bounds[0][3], bounds[0][0],bounds[0][2])).save(app.root_path + '/' + img_path)
+
+    new_image = lbph_conv(img_path, app.root_path)
+    new_image_path = 'static/images/face_detected_image.png'
+    new_image.save(app.root_path + '/' + new_image_path)
+    # print(lbph(new_image_path, app.root_path,10,10))
+
+    print(lbph_sim(lbph(new_image_path, app.root_path,10,10), datas.um))
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0',port=8111)
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    app.run(host='0.0.0.0',port=8111)
+    # app.run(host='0.0.0.0',port=os.environ['PORT'])

@@ -1,4 +1,3 @@
-# David T 13515131 
 from PIL import Image, ImageDraw
 
 from math import sqrt, trunc
@@ -74,7 +73,7 @@ def face_detect(image, raw_image, root_path):
         nose_left = face_left + (0.26 * face_width)
         draw.rectangle(((nose_left, nose_top), (nose_right, nose_below)), fill=None, outline="#55efc4")
         arr_nose = [nose_left, nose_top, nose_right, nose_below]
-        nose_bounds = object_boundary(new_image_path, root_path, arr_nose, "nose")
+        nose_bounds = object_boundary(raw_image, root_path, arr_nose, "nose")
         minb1, minb3 = 999, 999
         maxb0, maxb2 = 0, 0
         for nb in nose_bounds:
@@ -88,7 +87,7 @@ def face_detect(image, raw_image, root_path):
     new_image = image
     new_image_path = 'static/images/face_detected_image.png'
     new_image.save(root_path  + '/' + new_image_path)
-    return new_image_path, mouth_bounds, eye_bounds, nose_bounds
+    return new_image_path, bounds, mouth_bounds, eye_bounds, nose_bounds
 
 def face_boundary(image, root_path):
     img = Image.open(root_path + '/' + image)
