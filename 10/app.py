@@ -302,7 +302,10 @@ def main11():
     image = Image.open(app.root_path + '/' + img_path)
     image.thumbnail(size, Image.ANTIALIAS)
     image.save(app.root_path + '/' + img_path)
-    new_image_path ,a, b, c = face_detect(img_path, 'static/images/face_raw_image.png', app.root_path)
+    raw_img_path = 'static/images/face_raw_image.png'
+    new_image_path ,a, b, c = face_detect(img_path, raw_img_path, app.root_path)
+    raw_img = Image.open(app.root_path + '/' + raw_img_path)
+    raw_img = np.array(raw_img)
     print(a,b,c)
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
