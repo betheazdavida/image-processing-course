@@ -311,5 +311,5 @@ def main11():
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=8111)
-    # app.run(host='0.0.0.0',port=os.environ['PORT'])
+    # app.run(host='0.0.0.0',port=8111)
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
