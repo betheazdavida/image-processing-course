@@ -343,6 +343,16 @@ def main10():
         for eb in eye_bounds:
             draw.rectangle(((eb[1]-1, eb[3]-1), (eb[0]+1, eb[2]+1)), fill=None, outline="#e84393")
 
+        nose_top = face_top + (0.38 * face_height)
+        nose_below = face_below - (0.22 * face_height)
+        nose_right = face_right - (0.25 * face_width)
+        nose_left = face_left + (0.25 * face_width)
+        draw.rectangle(((nose_left, nose_top), (nose_right, nose_below)), fill=None, outline="#55efc4")
+        arr_nose = [nose_left, nose_top, nose_right, nose_below]
+        nose_bounds = object_boundary(new_image_path, app.root_path, arr_nose, "nose")
+        for nb in nose_bounds:
+            draw.rectangle(((nb[1]-1, nb[3]-1), (nb[0]+1, nb[2]+1)), fill=None, outline="#e67e22")
+
     new_image = image
     new_image_path = 'static/images/face_detected_image.png'
     new_image.save(app.root_path  + '/' + new_image_path)

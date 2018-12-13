@@ -60,8 +60,8 @@ def face_boundary(image, root_path):
                     print(bound, density)
                     if(density > 0.35):
                         #remove neck
-                        if(del_y > del_x*1.2):
-                            bound[2] = bound[3] + del_x*1.2
+                        if(del_y > del_x*1.3):
+                            bound[2] = bound[3] + del_x*1.3
                         #append as face
                         bounds.append(bound)
     return bounds
@@ -130,5 +130,10 @@ def object_boundary(image, root_path, arr, obj):
                     
                 elif obj == "eye":
                     if(del_x > 6 and del_y > 2 and del_x > del_y and density > 30):
+                        bounds.append(bound)
+
+                elif obj == "nose":
+                    delxy = abs(del_x - del_y)
+                    if(del_y - del_x < 3 and delxy <= 7 and 23 <= density and density <= 70):
                         bounds.append(bound)
     return bounds
