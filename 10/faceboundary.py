@@ -24,9 +24,8 @@ def face_detect(image, raw_image, root_path):
                 new_image[y][x] = 1
 
     new_image = Image.fromarray(np.uint8(new_image*255))
-    new_image_path = raw_image
-    new_image.save(root_path  + '/' + new_image_path)
-    bounds = face_boundary(new_image_path, root_path)
+    new_image.save(root_path  + '/' + raw_image)
+    bounds = face_boundary(raw_image, root_path)
     draw = ImageDraw.Draw(image)
     
     for b in bounds:
@@ -47,7 +46,7 @@ def face_detect(image, raw_image, root_path):
         mouth_left = face_left + (0.21 * face_width)
         draw.rectangle(((mouth_left, mouth_top), (mouth_right, mouth_below)), fill=None, outline="#81ecec")
         arr_mouth = [mouth_left, mouth_top, mouth_right, mouth_below]
-        mouth_bounds = object_boundary(new_image_path, root_path, arr_mouth, "mouth")
+        mouth_bounds = object_boundary(raw_image, root_path, arr_mouth, "mouth")
         minb1, minb3 = 999, 999
         maxb0, maxb2 = 0, 0
         for mb in mouth_bounds:
@@ -65,7 +64,7 @@ def face_detect(image, raw_image, root_path):
         eye_left = face_left + (0.1 * face_width)
         draw.rectangle(((eye_left, eye_top), (eye_right, eye_below)), fill=None, outline="#55efc4")
         arr_eye = [eye_left, eye_top, eye_right, eye_below]
-        eye_bounds = object_boundary(new_image_path, root_path, arr_eye, "eye")
+        eye_bounds = object_boundary(raw_image, root_path, arr_eye, "eye")
         for eb in eye_bounds:
             draw.rectangle(((eb[1]-1, eb[3]-1), (eb[0]+1, eb[2]+1)), fill=None, outline="#e84393")
 
@@ -75,7 +74,7 @@ def face_detect(image, raw_image, root_path):
         nose_left = face_left + (0.25 * face_width)
         draw.rectangle(((nose_left, nose_top), (nose_right, nose_below)), fill=None, outline="#55efc4")
         arr_nose = [nose_left, nose_top, nose_right, nose_below]
-        nose_bounds = object_boundary(new_image_path, root_path, arr_nose, "nose")
+        nose_bounds = object_boundary(raw_image, root_path, arr_nose, "nose")
         for nb in nose_bounds:
             draw.rectangle(((nb[1]-1, nb[3]-1), (nb[0]+1, nb[2]+1)), fill=None, outline="#e67e22")
 
@@ -110,7 +109,7 @@ def face_boundary(image, root_path):
             if(img_pix[m,n] == 255):
                 density = 1
                 img_pix[m,n] = 0
-                #visit all neighbors and find bound: max x, min x, max y, min y
+                #visit all neighbors and find bound: max height, min height, max width, min width
                 toFill = []
                 toFill.append([m,n])
                 bound = [m,m,n,n]
