@@ -280,7 +280,8 @@ def main10():
     image = Image.open(app.root_path + '/' + img_path)
     image.thumbnail(size, Image.ANTIALIAS)
     image.save(app.root_path + '/' + img_path)
-    new_image_path ,_, _, _ = face_detect(img_path, app.root_path)
+    raw_img_path = 'static/images/face_raw_image.png'
+    new_image_path ,_, _, _ = face_detect(img_path, raw_img_path, app.root_path)
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
 
 @app.route("/11", methods=['GET'])
