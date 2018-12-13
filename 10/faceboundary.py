@@ -60,8 +60,8 @@ def face_boundary(image, root_path):
                     print(bound, density)
                     if(density > 0.35):
                         #remove neck
-                        if(del_y > del_x*1.2):
-                            bound[2] = bound[3] + del_x*1.2
+                        if(del_y > del_x*1.3):
+                            bound[2] = bound[3] + del_x*1.3
                         #append as face
                         bounds.append(bound)
     return bounds
