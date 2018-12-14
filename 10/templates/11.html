@@ -78,6 +78,12 @@
     .error {
       color: red;
     }
+
+    .ress {
+      font-size: 40px;
+      width: 90%;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -110,6 +116,7 @@
       <br /><div id="loading" class="subtitle">Loading...</div>
       <br /><div id="error" class="subtitle error">Error</div>
       <img id="result" class="card" src="">
+      <div id="result2" class="subtitle ress"></div>
     </div>
   </div>
 
@@ -121,6 +128,7 @@
   $("#results").hide();
   $("#result").hide();
   $("#error").hide();
+  $("#result2").hide();
 
   var loadFile = function(event) {
     var outputbef = document.getElementById('outputbef');
@@ -149,6 +157,7 @@
       beforeSend: function() {
         $("#results").hide();
         $("#error").hide();
+        $("#result2").hide();
         $("#loading").show();
         $("#submit").prop('disabled', true);
       },
@@ -159,11 +168,14 @@
         $("#submit").prop('disabled', false);
         $("#result").show();
         $('#result').attr('src', JSON.parse(response).url_after);
+        $("#result2").show();
+        $("#result2").text(JSON.parse(response).res);
       },
       error: function(error) {
         $("#results").show();
         $("#error").show();
         $("#loading").hide();
+        $("#result2").hide();
         $("#submit").prop('disabled', false);
       }
     });

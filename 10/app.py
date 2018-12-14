@@ -314,10 +314,24 @@ def main11():
     new_image = lbph_conv(img_path, app.root_path)
     new_image_path = 'static/images/face_detected_image.png'
     new_image.save(app.root_path + '/' + new_image_path)
-    # print(lbph(new_image_path, app.root_path,10,10))
+    res = ''
+    gridd = 5
 
-    print(lbph_sim(lbph(new_image_path, app.root_path,10,10), datas.um))
-    return json.dumps({'url_after': new_image_path + '?' + str(time.time()) })
+    # print(lbph(new_image_path, app.root_path,gridd,gridd))
+    
+    data_input = lbph(new_image_path, app.root_path,gridd,gridd)
+    um = lbph_sim(data_input, datas.um)
+    dapid = lbph_sim(data_input, datas.dapid)
+
+    dic = {'um': um, 'dapid': dapid}
+    mnk = min(dic, key=dic.get)
+    mn = dic[mnk]
+    print(mn)
+    res += mnk
+    if mn > 800:
+        res = 'Siapa tuh'
+
+    return json.dumps({'url_after': new_image_path + '?' + str(time.time()), 'res': res })
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=8111)
