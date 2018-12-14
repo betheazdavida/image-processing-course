@@ -320,16 +320,18 @@ def main11():
     # print(lbph(new_image_path, app.root_path,gridd,gridd))
     
     data_input = lbph(new_image_path, app.root_path,gridd,gridd)
+
     um = lbph_sim(data_input, datas.um)
     dapid = lbph_sim(data_input, datas.dapid)
+    bet = lbph_sim(data_input, datas.bet)
 
-    dic = {'um': um, 'dapid': dapid}
+    dic = {'um': um, 'david': dapid, 'bethea': bet}
+    print(dic)
     mnk = min(dic, key=dic.get)
     mn = dic[mnk]
-    print(mn)
+    if mn > 900:
+        res = 'Mungkin.. '
     res += mnk
-    if mn > 800:
-        res = 'Siapa tuh'
 
     return json.dumps({'url_after': new_image_path + '?' + str(time.time()), 'res': res })
 
